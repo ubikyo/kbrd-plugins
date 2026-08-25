@@ -1,0 +1,21 @@
+{
+  "name": "@kbrd/plugins",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    "./image": "./src/image/web/index.ts",
+    "./label": "./src/label/web/index.ts",
+    "./rectangle": "./src/rectangle/web/index.ts",
+    "./web": "./src/web.ts"
+  },
+  "peerDependencies": {
+    "@mantine/core": "^8.3.12",
+    "react": "^19.2.0"
+  },
+  "devDependencies": {
+    "@mantine/core": "8.3.12",
+    "@types/react": "^19.2.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "id": "kbrd.set-geometry",
+  "name": "Set geometry",
+  "version": "1.0.0",
+  "category": "Action",
+  "icon": "geometry",
+  "capabilities": ["action"],
+  "permissions": ["geometry", "workspace"],
+  "defaultConfig": {
+    "geometryId": null,
+    "workspaceId": null,
+    "event": "down"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "id": "kbrd.set-workspace",
+  "name": "Set workspace",
+  "version": "1.0.0",
+  "category": "Action",
+  "icon": "workspace",
+  "capabilities": ["action"],
+  "permissions": ["workspace"],
+  "defaultConfig": {
+    "workspaceId": null,
+    "event": "down"
+  }
+}
