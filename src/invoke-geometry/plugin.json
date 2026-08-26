@@ -1,8 +1,8 @@
 {
-  "id": "kbrd.set-geometry",
-  "name": "Set geometry",
+  "id": "kbrd.invoke-geometry",
+  "name": "Geometry",
   "version": "1.0.0",
-  "category": "Action",
+  "category": "Invoke",
   "icon": "geometry",
   "capabilities": ["action"],
   "permissions": ["geometry", "workspace"],

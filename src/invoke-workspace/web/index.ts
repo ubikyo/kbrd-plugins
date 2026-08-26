@@ -2,7 +2,7 @@ export { default as Editor } from "./Editor";
 export { default as Renderer } from "../../shared/web/ActionRenderer";
 export { default as manifest } from "../plugin.json";
 
-export type SetWorkspaceConfig = {
+export type WorkspaceConfig = {
   workspaceId: number | null;
   event: "down" | "up";
 };

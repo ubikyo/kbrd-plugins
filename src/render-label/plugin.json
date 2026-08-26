@@ -1,8 +1,8 @@
 {
-  "id": "kbrd.label",
+  "id": "kbrd.render-label",
   "name": "Label",
   "version": "1.0.0",
-  "category": "Display",
+  "category": "Render",
   "icon": "label",
   "capabilities": ["render"],
   "permissions": [],

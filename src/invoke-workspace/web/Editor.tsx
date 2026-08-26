@@ -1,7 +1,7 @@
 import { Group, Select, Stack, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
 
-import type { SetWorkspaceConfig } from "./index";
+import type { WorkspaceConfig } from "./index";
 
 type Option = { value: string; label: string };
 type Geometry = { id: number; name: string };
@@ -12,8 +12,8 @@ export default function Editor({
   onChange,
   disabled = false,
 }: {
-  config: SetWorkspaceConfig;
-  onChange: (value: SetWorkspaceConfig) => void;
+  config: WorkspaceConfig;
+  onChange: (value: WorkspaceConfig) => void;
   disabled?: boolean;
 }) {
   const [options, setOptions] = useState<Option[]>([]);

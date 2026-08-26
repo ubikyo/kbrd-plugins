@@ -1,8 +1,8 @@
 {
-  "id": "kbrd.image",
+  "id": "kbrd.render-image",
   "name": "Image",
   "version": "1.0.0",
-  "category": "Display",
+  "category": "Render",
   "icon": "image",
   "capabilities": ["render"],
   "permissions": ["media"],

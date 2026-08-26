@@ -1,0 +1,14 @@
+{
+  "id": "kbrd.invoke-keystroke",
+  "name": "Keystroke",
+  "version": "1.0.0",
+  "category": "Invoke",
+  "icon": "keyboard",
+  "capabilities": ["action"],
+  "permissions": ["keyboard"],
+  "defaultConfig": {
+    "keys": ["A"],
+    "behavior": "hold",
+    "durationMs": 50
+  }
+}

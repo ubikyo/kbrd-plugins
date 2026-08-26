@@ -1,7 +1,7 @@
 import { Group, Select, Stack, Text } from "@mantine/core";
 import { useEffect, useMemo, useState } from "react";
 
-import type { SetGeometryConfig } from "./index";
+import type { GeometryConfig } from "./index";
 
 type Geometry = { id: number; name: string };
 type Workspace = { id: number; geometry_id: number; name: string };
@@ -11,8 +11,8 @@ export default function Editor({
   onChange,
   disabled = false,
 }: {
-  config: SetGeometryConfig;
-  onChange: (value: SetGeometryConfig) => void;
+  config: GeometryConfig;
+  onChange: (value: GeometryConfig) => void;
   disabled?: boolean;
 }) {
   const [geometries, setGeometries] = useState<Geometry[]>([]);

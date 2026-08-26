@@ -1,8 +1,8 @@
 {
-  "id": "kbrd.set-workspace",
-  "name": "Set workspace",
+  "id": "kbrd.invoke-workspace",
+  "name": "Workspace",
   "version": "1.0.0",
-  "category": "Action",
+  "category": "Invoke",
   "icon": "workspace",
   "capabilities": ["action"],
   "permissions": ["workspace"],

@@ -2,27 +2,32 @@ import {
   Editor as LabelEditor,
   Renderer as LabelRenderer,
   manifest as labelManifest,
-} from "./label/web";
+} from "./render-label/web";
 import {
   Editor as ImageEditor,
   Renderer as ImageRenderer,
   manifest as imageManifest,
-} from "./image/web";
+} from "./render-image/web";
 import {
   Editor as RectangleEditor,
   Renderer as RectangleRenderer,
   manifest as rectangleManifest,
-} from "./rectangle/web";
+} from "./render-rectangle/web";
 import {
-  Editor as SetWorkspaceEditor,
-  Renderer as SetWorkspaceRenderer,
-  manifest as setWorkspaceManifest,
-} from "./set-workspace/web";
+  Editor as WorkspaceEditor,
+  Renderer as WorkspaceRenderer,
+  manifest as workspaceManifest,
+} from "./invoke-workspace/web";
 import {
-  Editor as SetGeometryEditor,
-  Renderer as SetGeometryRenderer,
-  manifest as setGeometryManifest,
-} from "./set-geometry/web";
+  Editor as GeometryEditor,
+  Renderer as GeometryRenderer,
+  manifest as geometryManifest,
+} from "./invoke-geometry/web";
+import {
+  Editor as KeystrokeEditor,
+  Renderer as KeystrokeRenderer,
+  manifest as keystrokeManifest,
+} from "./invoke-keystroke/web";
 
 export const plugins = [
   {
@@ -41,13 +46,18 @@ export const plugins = [
     Renderer: RectangleRenderer,
   },
   {
-    ...setWorkspaceManifest,
-    Editor: SetWorkspaceEditor,
-    Renderer: SetWorkspaceRenderer,
+    ...workspaceManifest,
+    Editor: WorkspaceEditor,
+    Renderer: WorkspaceRenderer,
   },
   {
-    ...setGeometryManifest,
-    Editor: SetGeometryEditor,
-    Renderer: SetGeometryRenderer,
+    ...geometryManifest,
+    Editor: GeometryEditor,
+    Renderer: GeometryRenderer,
+  },
+  {
+    ...keystrokeManifest,
+    Editor: KeystrokeEditor,
+    Renderer: KeystrokeRenderer,
   },
 ];

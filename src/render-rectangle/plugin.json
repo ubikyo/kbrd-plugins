@@ -1,8 +1,8 @@
 {
-  "id": "kbrd.rectangle",
+  "id": "kbrd.render-rectangle",
   "name": "Rectangle",
   "version": "1.0.0",
-  "category": "Display",
+  "category": "Render",
   "icon": "rectangle",
   "capabilities": ["render"],
   "permissions": [],
