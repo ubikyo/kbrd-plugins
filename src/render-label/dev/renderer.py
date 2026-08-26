@@ -11,7 +11,7 @@ SIZES = {"xs": 2.5, "sm": 3.2, "md": 4, "lg": 5, "xl": 6}
 DATA_FONTS = Path("/data/fonts")
 BUNDLED_FONTS = Path("/usr/share/kbrd/fonts")
 DEFAULT_FONT = "Inter_18pt-Regular.ttf"
-COLOR_EMOJI_FONT = "NotoColorEmoji.ttf"
+COLOR_EMOJI_FONT = "NotoColorEmoji-Regular.ttf"
 COLOR_EMOJI_STRIKE = 109
 
 
@@ -28,6 +28,11 @@ def font_path(filename):
 def emoji_texture(text, path):
     from PIL import Image, ImageDraw, ImageFont
 
+    # Pillow's basic layout engine counts emoji presentation selectors as
+    # separate glyph advances.  The bundled color font is already dedicated
+    # to emoji rendering, so selectors are redundant and would offset glyphs
+    # such as "❤️" by half of their reported width.
+    text = text.replace("\ufe0e", "").replace("\ufe0f", "")
     font = ImageFont.truetype(path, COLOR_EMOJI_STRIKE)
     probe = Image.new("RGBA", (1, 1))
     draw = ImageDraw.Draw(probe)
