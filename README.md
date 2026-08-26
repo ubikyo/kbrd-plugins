@@ -1,21 +1,16 @@
 # KBRD Plugins
 
-> [!NOTE]
-> TODO
+Plugins de [KBRD](https://github.com/ubikyo/kbrd).
 
-Plugins partagés par KBRD-WEB et KBRD-DEV.
+Chaque plugin se trouve dans le dossier `src/<plugin>/` et contient :
 
-Chaque plugin se trouve dans `src/<plugin>/` et contient :
+|Fichier|Description|
+|-|-|
+|`plugin.json`|Description du plugin|
+|`web/Editor.tsx`|Formulaire de configuration dans `KBRD-WEB`|
+|`web/Renderer.tsx`|Rendu du plugin dans `KBRD-WEB`|
+|`dev/renderer.py`|Rendu du plugin dans `KBRD-DEV`|
+|`dev/controller.py`|Actions réalisés dans `KBRD-DEV`|.
 
-- `plugin.json` : identifiant, nom, catégorie, version et configuration initiale ;
-- `web/Editor.tsx` : formulaire de configuration Mantine ;
-- `web/Renderer.tsx` : rendu SVG dans l'aperçu ;
-- `dev/renderer.py` : rendu Kivy sur le clavier ;
-- `dev/controller.py` : réactions `on_press` et `on_release` côté clavier.
-
-Les plugins `label` et `image` fournissent les premières implémentations de
-référence. Le plugin Image envoie ses fichiers à l'API dans `/data/media` et
-les référence par un nom de fichier généré. Les renderers et
-controllers Python sont découverts dynamiquement depuis
-`/usr/share/kbrd/plugins` par KBRD-DEV. Le renderer web d'un nouveau plugin doit
-être ajouté à la liste exportée par `src/web.ts`.
+> [!IMPORTANT]
+> Les renderers et controllers Python sont découverts dynamiquement depuis `/usr/share/kbrd/plugins` par `KBRD-DEV`. Le renderer web d'un nouveau plugin doit être ajouté à la liste exportée par `src/web.ts`.
