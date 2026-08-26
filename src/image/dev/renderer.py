@@ -3,7 +3,7 @@ from pathlib import Path
 from kivy.uix.image import Image
 
 
-MEDIA_DIR = Path("/data/medias")
+MEDIA_DIR = Path("/data/media")
 
 
 def render(key, config):

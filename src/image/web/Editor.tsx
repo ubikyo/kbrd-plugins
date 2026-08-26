@@ -28,7 +28,7 @@ export default function Editor({ config, onChange, disabled = false }: Props) {
     try {
       const body = new FormData();
       body.append("file", file);
-      const response = await fetch("/api/medias", { method: "POST", body });
+      const response = await fetch("/api/media", { method: "POST", body });
       const result = (await response.json().catch(() => null)) as
         | { filename?: string; error?: string }
         | null;

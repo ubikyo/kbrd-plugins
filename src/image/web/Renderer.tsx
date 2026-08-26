@@ -36,7 +36,7 @@ export default function Renderer({
 
   return (
     <image
-      href={`/api/medias/${encodeURIComponent(config.media)}`}
+      href={`/api/media/${encodeURIComponent(config.media)}`}
       x={imageX}
       y={imageY}
       width={imageWidth}
