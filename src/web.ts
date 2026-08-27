@@ -9,6 +9,11 @@ import {
   manifest as imageManifest,
 } from "./render-image/web";
 import {
+  Editor as VideoEditor,
+  Renderer as VideoRenderer,
+  manifest as videoManifest,
+} from "./render-video/web";
+import {
   Editor as RectangleEditor,
   Renderer as RectangleRenderer,
   manifest as rectangleManifest,
@@ -39,6 +44,11 @@ export const plugins = [
     ...imageManifest,
     Editor: ImageEditor,
     Renderer: ImageRenderer,
+  },
+  {
+    ...videoManifest,
+    Editor: VideoEditor,
+    Renderer: VideoRenderer,
   },
   {
     ...rectangleManifest,

@@ -4,6 +4,7 @@
   "type": "module",
   "exports": {
     "./render-image": "./src/render-image/web/index.ts",
+    "./render-video": "./src/render-video/web/index.ts",
     "./render-label": "./src/render-label/web/index.ts",
     "./render-rectangle": "./src/render-rectangle/web/index.ts",
     "./invoke-keystroke": "./src/invoke-keystroke/web/index.ts",

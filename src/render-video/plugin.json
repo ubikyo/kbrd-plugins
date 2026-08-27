@@ -1,0 +1,27 @@
+{
+  "id": "kbrd.render-video",
+  "name": "Video",
+  "version": "1.0.0",
+  "category": "Render",
+  "icon": "movie",
+  "capabilities": ["render"],
+  "permissions": ["media"],
+  "defaultConfig": {
+    "media": "",
+    "name": "",
+    "fit": "contain",
+    "loop": false,
+    "playCount": 1,
+    "fullSize": true,
+    "size": 75,
+    "precisePlacement": false,
+    "x": 50,
+    "y": 50,
+    "verticalPosition": "middle",
+    "horizontalPosition": "center",
+    "down": {
+      "enabled": false,
+      "delay": 0
+    }
+  }
+}
