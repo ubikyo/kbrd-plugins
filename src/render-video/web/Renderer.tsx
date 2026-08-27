@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useState } from "react";
 
 import type { VideoConfig } from "./index";
 
@@ -15,29 +15,24 @@ export default function Renderer({
   width: number;
   height: number;
 }) {
-  const completedPlays = useRef(0);
+  const [videoRatio, setVideoRatio] = useState<number | null>(null);
+
+  useEffect(() => setVideoRatio(null), [config.media]);
+
   if (!config.media) return null;
 
-  const playCount = Math.max(1, Math.floor(config.playCount ?? 1));
-  const ratio = config.fullSize ? 1 : Math.max(0.1, config.size / 100);
-  const videoWidth = width * ratio;
-  const videoHeight = height * ratio;
-  const preciseX = Math.max(0, Math.min(100, config.x ?? 50)) / 100;
-  const preciseY = Math.max(0, Math.min(100, config.y ?? 50)) / 100;
-  const videoX = !config.fullSize && config.precisePlacement
-    ? x + (width - videoWidth) * preciseX
-    : config.horizontalPosition === "left"
-      ? x
-      : config.horizontalPosition === "right"
-        ? x + width - videoWidth
-        : x + (width - videoWidth) / 2;
-  const videoY = !config.fullSize && config.precisePlacement
-    ? y + (height - videoHeight) * preciseY
-    : config.verticalPosition === "top"
-      ? y
-      : config.verticalPosition === "bottom"
-        ? y + height - videoHeight
-        : y + (height - videoHeight) / 2;
+  const unconstrained = config.unconstrained === true;
+  const targetRatio = width / height;
+  const videoWidth =
+    unconstrained && videoRatio && videoRatio > targetRatio
+      ? height * videoRatio
+      : width;
+  const videoHeight =
+    unconstrained && videoRatio && videoRatio < targetRatio
+      ? width / videoRatio
+      : height;
+  const videoX = x + (width - videoWidth) / 2;
+  const videoY = y + (height - videoHeight) / 2;
 
   return (
     <foreignObject
@@ -48,28 +43,26 @@ export default function Renderer({
       pointerEvents="none"
     >
       <video
-        key={`${config.media}-${config.loop}-${playCount}`}
+        key={config.media}
         src={`/api/media/${encodeURIComponent(config.media)}`}
         autoPlay
         muted
         playsInline
-        loop={config.loop ?? false}
+        loop
         preload="auto"
-        onLoadedData={() => {
-          completedPlays.current = 0;
-        }}
-        onEnded={(event) => {
-          completedPlays.current += 1;
-          if (!config.loop && completedPlays.current < playCount) {
-            event.currentTarget.currentTime = 0;
-            void event.currentTarget.play();
+        onLoadedMetadata={(event) => {
+          if (event.currentTarget.videoHeight > 0) {
+            setVideoRatio(
+              event.currentTarget.videoWidth / event.currentTarget.videoHeight,
+            );
           }
         }}
         style={{
           display: "block",
           width: "100%",
           height: "100%",
-          objectFit: config.fit === "cover" ? "cover" : "contain",
+          objectFit: unconstrained ? "fill" : "cover",
+          objectPosition: "center",
         }}
       />
     </foreignObject>

@@ -4,6 +4,11 @@ import {
   manifest as labelManifest,
 } from "./render-label/web";
 import {
+  Editor as KeySymbolEditor,
+  Renderer as KeySymbolRenderer,
+  manifest as keySymbolManifest,
+} from "./render-key-symbol/web";
+import {
   Editor as ImageEditor,
   Renderer as ImageRenderer,
   manifest as imageManifest,
@@ -33,12 +38,22 @@ import {
   Renderer as KeystrokeRenderer,
   manifest as keystrokeManifest,
 } from "./invoke-keystroke/web";
+import {
+  Editor as ApplicationEditor,
+  Renderer as ApplicationRenderer,
+  manifest as applicationManifest,
+} from "./invoke-application/web";
 
 export const plugins = [
   {
     ...labelManifest,
     Editor: LabelEditor,
     Renderer: LabelRenderer,
+  },
+  {
+    ...keySymbolManifest,
+    Editor: KeySymbolEditor,
+    Renderer: KeySymbolRenderer,
   },
   {
     ...imageManifest,
@@ -69,5 +84,10 @@ export const plugins = [
     ...keystrokeManifest,
     Editor: KeystrokeEditor,
     Renderer: KeystrokeRenderer,
+  },
+  {
+    ...applicationManifest,
+    Editor: ApplicationEditor,
+    Renderer: ApplicationRenderer,
   },
 ];

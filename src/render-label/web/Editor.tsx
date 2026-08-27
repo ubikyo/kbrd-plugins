@@ -1,6 +1,5 @@
 import {
-  Box,
-  ColorPicker,
+  ColorInput,
   Input,
   Select,
   Slider,
@@ -11,8 +10,8 @@ import { useEffect, useState } from "react";
 
 import type { LabelConfig } from "./index";
 import Placement from "../../shared/web/Placement";
+import { fontSizeMarks, fontSizeValue } from "../../shared/web/fontSize";
 
-const sizes = ["xs", "sm", "md", "lg", "xl"] as const;
 const swatches = [
   "#ffffff",
   "#adb5bd",
@@ -43,15 +42,24 @@ function loadFonts() {
 
 export default function Editor({ config, onChange, disabled = false }: Props) {
   const [fonts, setFonts] = useState<FontOption[]>([]);
+  const [fontError, setFontError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     void loadFonts()
       .then((values) => {
-        if (!cancelled) setFonts(values);
+        if (!cancelled) {
+          setFonts(values);
+          setFontError(null);
+        }
       })
-      .catch(() => {
-        if (!cancelled) setFonts([]);
+      .catch((cause: unknown) => {
+        if (!cancelled) {
+          setFonts([]);
+          setFontError(
+            cause instanceof Error ? cause.message : "Unable to load fonts",
+          );
+        }
       });
     return () => {
       cancelled = true;
@@ -68,6 +76,8 @@ export default function Editor({ config, onChange, disabled = false }: Props) {
         label="Text"
         value={config.text}
         disabled={disabled}
+        error={config.text.trim() ? undefined : "Text is required"}
+        success={Boolean(config.text.trim())}
         onChange={(event) => set("text", event.currentTarget.value)}
       />
       <Select
@@ -78,38 +88,33 @@ export default function Editor({ config, onChange, disabled = false }: Props) {
         data={fonts}
         value={config.font ?? "Inter_18pt-Regular.ttf"}
         disabled={disabled}
+        error={fontError || undefined}
+        success={!fontError && fonts.length > 0}
         onChange={(value) => value && set("font", value)}
       />
       <Input.Wrapper label="Size" pb="sm">
         <Slider
           mt="xs"
-          min={0}
-          max={4}
-          step={1}
-          restrictToMarks
+          min={2}
+          max={12}
+          step={0.1}
           disabled={disabled}
-          value={sizes.indexOf(config.size)}
-          onChange={(value) => set("size", sizes[value])}
-          marks={sizes.map((label, value) => ({ value, label }))}
+          value={fontSizeValue(config.size)}
+          onChange={(value) => set("size", value)}
+          marks={fontSizeMarks}
         />
       </Input.Wrapper>
-      <Input.Wrapper label="Color">
-        <Box
-          mt="xs"
-          style={{
-            opacity: disabled ? 0.5 : 1,
-            pointerEvents: disabled ? "none" : undefined,
-          }}
-        >
-          <ColorPicker
-            fullWidth
-            format="hex"
-            value={config.color}
-            onChange={(value) => set("color", value)}
-            swatches={swatches}
-          />
-        </Box>
-      </Input.Wrapper>
+      <ColorInput
+        label="Color"
+        format="hex"
+        value={config.color}
+        disabled={disabled}
+        error={/^#[0-9a-f]{6}$/i.test(config.color) ? undefined : "Invalid color"}
+        success={/^#[0-9a-f]{6}$/i.test(config.color)}
+        swatches={swatches}
+        closeOnColorSwatchClick
+        onChange={(value) => set("color", value)}
+      />
       <Placement config={config} onChange={onChange} disabled={disabled} />
     </Stack>
   );

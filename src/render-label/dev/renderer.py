@@ -90,7 +90,12 @@ def render(key, config):
 
     def sync(*args):
         state = current_config[0]
-        font_size = SIZES.get(state.get("size"), 4)
+        size = state.get("size", "md")
+        font_size = (
+            float(size)
+            if isinstance(size, (int, float))
+            else SIZES.get(size, 4)
+        )
         millimetres = getattr(key, "unit", "mm") == "mm"
         inset = mm(2) if millimetres else 2
         pixels = mm(font_size) if millimetres else font_size

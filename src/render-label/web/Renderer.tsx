@@ -1,7 +1,7 @@
 import type { LabelConfig } from "./index";
 import { Fragment, useEffect, useId, useState } from "react";
+import { fontSizeValue } from "../../shared/web/fontSize";
 
-const font = { xs: 2.5, sm: 3.2, md: 4, lg: 5, xl: 6 };
 const fontLoads = new Map<string, Promise<FontFace>>();
 
 function loadFont(filename: string, family: string) {
@@ -76,7 +76,7 @@ export default function Renderer({
       x={px}
       y={py}
       fill={config.color}
-      fontSize={font[config.size]}
+      fontSize={fontSizeValue(config.size)}
       fontFamily={loadedFont === filename ? family : "KBRD Inter"}
       textAnchor={
         config.precisePlacement

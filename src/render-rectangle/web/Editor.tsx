@@ -1,6 +1,5 @@
 import {
-  Box,
-  ColorPicker,
+  ColorInput,
   Input,
   Slider,
   Stack,
@@ -59,23 +58,21 @@ export default function Editor({ config, onChange, disabled = false }: Props) {
           onChange={(value) => set("height", value)}
         />
       </Input.Wrapper>
-      <Input.Wrapper label="Color">
-        <Box
-          mt="xs"
-          style={{
-            opacity: disabled ? 0.5 : 1,
-            pointerEvents: disabled ? "none" : undefined,
-          }}
-        >
-          <ColorPicker
-            fullWidth
-            format="hex"
-            value={config.color ?? "#ffffff"}
-            onChange={(value) => set("color", value)}
-            swatches={swatches}
-          />
-        </Box>
-      </Input.Wrapper>
+      <ColorInput
+        label="Color"
+        format="hex"
+        value={config.color ?? "#ffffff"}
+        disabled={disabled}
+        error={
+          /^#[0-9a-f]{6}$/i.test(config.color ?? "#ffffff")
+            ? undefined
+            : "Invalid color"
+        }
+        success={/^#[0-9a-f]{6}$/i.test(config.color ?? "#ffffff")}
+        swatches={swatches}
+        closeOnColorSwatchClick
+        onChange={(value) => set("color", value)}
+      />
     </Stack>
   );
 }

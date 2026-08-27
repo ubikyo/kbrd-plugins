@@ -22,7 +22,7 @@ def render(key, config):
         image.opacity = 1
         ratio = 1 if state.get("fullSize", True) else max(
             0.1,
-            min(1, float(state.get("size", 75)) / 100),
+            float(state.get("size", 75)) / 100,
         )
         image.size = (key.width * ratio, key.height * ratio)
         if not state.get("fullSize", True) and state.get("precisePlacement", False):

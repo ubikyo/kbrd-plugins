@@ -6,18 +6,20 @@
     "./render-image": "./src/render-image/web/index.ts",
     "./render-video": "./src/render-video/web/index.ts",
     "./render-label": "./src/render-label/web/index.ts",
+    "./render-key-symbol": "./src/render-key-symbol/web/index.ts",
     "./render-rectangle": "./src/render-rectangle/web/index.ts",
     "./invoke-keystroke": "./src/invoke-keystroke/web/index.ts",
+    "./invoke-application": "./src/invoke-application/web/index.ts",
     "./invoke-geometry": "./src/invoke-geometry/web/index.ts",
     "./invoke-workspace": "./src/invoke-workspace/web/index.ts",
     "./web": "./src/web.ts"
   },
   "peerDependencies": {
-    "@mantine/core": "^8.3.12",
+    "@mantine/core": "^9.5.2",
     "react": "^19.2.0"
   },
   "devDependencies": {
-    "@mantine/core": "8.3.12",
+    "@mantine/core": "9.5.2",
     "@types/react": "^19.2.0",
     "react": "19.2.3",
     "react-dom": "19.2.3"

@@ -1,10 +1,5 @@
 import {
   FileInput,
-  Group,
-  Input,
-  NumberInput,
-  SegmentedControl,
-  Slider,
   Stack,
   Switch,
   Text,
@@ -12,15 +7,20 @@ import {
 import { useState } from "react";
 
 import type { VideoConfig } from "./index";
-import Placement from "../../shared/web/Placement";
 
 type Props = {
   config: VideoConfig;
   onChange: (value: VideoConfig) => void;
   disabled?: boolean;
+  targetType?: "key" | "background" | "space";
 };
 
-export default function Editor({ config, onChange, disabled = false }: Props) {
+export default function Editor({
+  config,
+  onChange,
+  disabled = false,
+  targetType,
+}: Props) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
 
@@ -63,6 +63,7 @@ export default function Editor({ config, onChange, disabled = false }: Props) {
         clearable={Boolean(config.media)}
         disabled={disabled || uploading}
         error={error || undefined}
+        success={Boolean(config.media) && !error}
         onChange={(file) => void upload(file)}
       />
       {config.media && (
@@ -70,64 +71,16 @@ export default function Editor({ config, onChange, disabled = false }: Props) {
           {config.name || config.media}
         </Text>
       )}
-      <Input.Wrapper label="Fit">
-        <SegmentedControl
-          mt="xs"
-          fullWidth
-          value={config.fit ?? "contain"}
+      {targetType === "key" && (
+        <Switch
+          label="Allow overflow outside the key"
+          description="Keeps the video centered without clipping it to the key."
+          checked={config.unconstrained ?? false}
           disabled={disabled}
-          onChange={(value) => set("fit", value as VideoConfig["fit"])}
-          data={[
-            { label: "Contain", value: "contain" },
-            { label: "Cover", value: "cover" },
-          ]}
+          onChange={(event) =>
+            set("unconstrained", event.currentTarget.checked)
+          }
         />
-      </Input.Wrapper>
-      <Switch
-        label="Loop"
-        checked={config.loop ?? false}
-        disabled={disabled}
-        onChange={(event) => set("loop", event.currentTarget.checked)}
-      />
-      {!config.loop && (
-        <Group justify="space-between" wrap="nowrap">
-          <Text size="sm">Play count</Text>
-          <NumberInput
-            w={160}
-            min={1}
-            step={1}
-            allowDecimal={false}
-            allowNegative={false}
-            clampBehavior="strict"
-            value={config.playCount ?? 1}
-            disabled={disabled}
-            onChange={(value) =>
-              set("playCount", typeof value === "number" ? value : 1)
-            }
-          />
-        </Group>
-      )}
-      <Switch
-        label="Fill the entire key"
-        checked={config.fullSize}
-        disabled={disabled}
-        onChange={(event) => set("fullSize", event.currentTarget.checked)}
-      />
-      {!config.fullSize && (
-        <Input.Wrapper label="Size" description={`${config.size} %`}>
-          <Slider
-            mt="xs"
-            min={10}
-            max={100}
-            step={5}
-            value={config.size}
-            disabled={disabled}
-            onChange={(value) => set("size", value)}
-          />
-        </Input.Wrapper>
-      )}
-      {!config.fullSize && (
-        <Placement config={config} onChange={onChange} disabled={disabled} />
       )}
     </Stack>
   );

@@ -1,0 +1,13 @@
+{
+  "id": "kbrd.invoke-application",
+  "name": "Application",
+  "version": "1.0.0",
+  "category": "Invoke",
+  "icon": "application",
+  "capabilities": ["action"],
+  "permissions": ["application"],
+  "defaultConfig": {
+    "applicationId": null,
+    "quitOnLongPress": false
+  }
+}

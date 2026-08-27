@@ -9,29 +9,12 @@ MEDIA_DIR = Path("/data/media")
 def render(key, config):
     current_config = [config]
     current_source = [None]
-    completed_plays = [0]
     video = Video(
         state="stop",
         volume=0,
-        fit_mode="contain",
+        fit_mode="cover",
         size_hint=(None, None),
     )
-
-    def play_count(state):
-        try:
-            return max(1, int(state.get("playCount", 1)))
-        except (TypeError, ValueError):
-            return 1
-
-    def on_eos(instance, value):
-        state = current_config[0]
-        if not value or state.get("loop", False):
-            return
-        completed_plays[0] += 1
-        if completed_plays[0] < play_count(state):
-            video.state = "play"
-
-    video.bind(eos=on_eos)
 
     def sync(*args):
         state = current_config[0]
@@ -41,37 +24,19 @@ def render(key, config):
             return
 
         video.opacity = 1
-        ratio = 1 if state.get("fullSize", True) else max(
-            0.1,
-            min(1, float(state.get("size", 75)) / 100),
-        )
-        video.size = (key.width * ratio, key.height * ratio)
-        if not state.get("fullSize", True) and state.get(
-            "precisePlacement",
-            False,
-        ):
-            precise_x = max(0, min(100, float(state.get("x", 50)))) / 100
-            precise_y = max(0, min(100, float(state.get("y", 50)))) / 100
-            video_x = key.x + (key.width - video.width) * precise_x
-            video_y = key.y + (key.height - video.height) * (1 - precise_y)
+        unconstrained = state.get("unconstrained", False)
+        source_width, source_height = video.texture_size
+        if unconstrained and source_width > 0 and source_height > 0:
+            scale = max(key.width / source_width, key.height / source_height)
+            video.size = (source_width * scale, source_height * scale)
+            video.fit_mode = "contain"
         else:
-            horizontal = state.get("horizontalPosition", "center")
-            video_x = (
-                key.x
-                if horizontal == "left"
-                else key.right - video.width
-                if horizontal == "right"
-                else key.x + (key.width - video.width) / 2
-            )
-            vertical = state.get("verticalPosition", "middle")
-            video_y = (
-                key.top - video.height
-                if vertical == "top"
-                else key.y
-                if vertical == "bottom"
-                else key.y + (key.height - video.height) / 2
-            )
-        video.pos = (video_x, video_y)
+            video.size = key.size
+            video.fit_mode = "cover"
+        video.pos = (
+            key.x + (key.width - video.width) / 2,
+            key.y + (key.height - video.height) / 2,
+        )
 
     def update(state):
         current_config[0] = state
@@ -81,20 +46,14 @@ def render(key, config):
             if filename and Path(filename).name == filename
             else ""
         )
-        loop = bool(state.get("loop", False))
-        count = play_count(state)
-        playback = (source, loop, count)
-        video.fit_mode = (
-            "cover" if state.get("fit") == "cover" else "contain"
-        )
+        playback = source
 
         if playback != current_source[0]:
             current_source[0] = playback
-            completed_plays[0] = 0
             video.state = "stop"
             video.unload()
             video.source = ""
-            video.options = {"eos": "loop" if loop else "stop"}
+            video.options = {"eos": "loop"}
             video.source = source
             video.state = "play" if source else "stop"
         sync()
@@ -105,6 +64,7 @@ def render(key, config):
         video.source = ""
 
     key.bind(pos=sync, size=sync)
+    video.bind(texture_size=sync)
     video.kbrd_update = update
     video.kbrd_dispose = dispose
     update(config)

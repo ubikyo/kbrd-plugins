@@ -9,16 +9,7 @@
   "defaultConfig": {
     "media": "",
     "name": "",
-    "fit": "contain",
-    "loop": false,
-    "playCount": 1,
-    "fullSize": true,
-    "size": 75,
-    "precisePlacement": false,
-    "x": 50,
-    "y": 50,
-    "verticalPosition": "middle",
-    "horizontalPosition": "center",
+    "unconstrained": false,
     "down": {
       "enabled": false,
       "delay": 0

@@ -67,6 +67,7 @@ export default function Editor({
   disabled?: boolean;
 }) {
   const behavior = config.behavior === "tap" ? "tap" : "hold";
+  const keys = Array.isArray(config.keys) ? config.keys : [];
 
   return (
     <Stack gap="md">
@@ -76,10 +77,12 @@ export default function Editor({
           searchable
           clearable
           data={data}
-          value={Array.isArray(config.keys) ? config.keys : []}
+          value={keys}
           disabled={disabled}
           placeholder="Select a key combination"
           maxValues={14}
+          error={keys.length === 0 ? "Select at least one key" : undefined}
+          success={keys.length > 0}
           onChange={(keys) => onChange({ ...config, keys })}
         />
       </Stack>
@@ -95,6 +98,7 @@ export default function Editor({
           ]}
           value={behavior}
           disabled={disabled}
+          success
           onChange={(value) =>
             onChange({ ...config, behavior: value === "tap" ? "tap" : "hold" })
           }
@@ -112,6 +116,15 @@ export default function Editor({
             suffix=" ms"
             value={config.durationMs ?? 50}
             disabled={disabled}
+            error={
+              (config.durationMs ?? 50) < 10 || (config.durationMs ?? 50) > 5000
+                ? "Duration must be between 10 and 5000 ms"
+                : undefined
+            }
+            success={
+              (config.durationMs ?? 50) >= 10 &&
+              (config.durationMs ?? 50) <= 5000
+            }
             onChange={(value) =>
               onChange({ ...config, durationMs: Number(value) || 50 })
             }

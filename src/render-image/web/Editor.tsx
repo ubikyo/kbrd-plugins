@@ -10,6 +10,14 @@ type Props = {
   disabled?: boolean;
 };
 
+const sizeMarks = [
+  { value: 25, label: "xs" },
+  { value: 50, label: "sm" },
+  { value: 75, label: "md" },
+  { value: 100, label: "lg" },
+  { value: 125, label: "xl" },
+];
+
 export default function Editor({ config, onChange, disabled = false }: Props) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
@@ -52,6 +60,7 @@ export default function Editor({ config, onChange, disabled = false }: Props) {
         clearable={Boolean(config.media)}
         disabled={disabled || uploading}
         error={error || undefined}
+        success={Boolean(config.media) && !error}
         onChange={(file) => void upload(file)}
       />
       {config.media && (
@@ -60,7 +69,7 @@ export default function Editor({ config, onChange, disabled = false }: Props) {
         </Text>
       )}
       <Switch
-        label="Fill the entire key"
+        label="Fill the entire element"
         checked={config.fullSize}
         disabled={disabled}
         onChange={(event) => set("fullSize", event.currentTarget.checked)}
@@ -70,8 +79,9 @@ export default function Editor({ config, onChange, disabled = false }: Props) {
           <Slider
             mt="xs"
             min={10}
-            max={100}
+            max={150}
             step={5}
+            marks={sizeMarks}
             value={config.size}
             disabled={disabled}
             onChange={(value) => set("size", value)}

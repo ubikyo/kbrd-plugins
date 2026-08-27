@@ -1,4 +1,14 @@
-import { Input, SegmentedControl, Slider, Stack, Switch } from "@mantine/core";
+import {
+  Combobox,
+  FloatingIndicator,
+  Input,
+  InputBase,
+  Slider,
+  Stack,
+  Switch,
+  useCombobox,
+} from "@mantine/core";
+import { useRef, useState } from "react";
 
 export type PlacementConfig = {
   precisePlacement: boolean;
@@ -13,6 +23,120 @@ type Props<T extends PlacementConfig> = {
   onChange: (value: T) => void;
   disabled?: boolean;
 };
+
+const positions = [
+  ["top", "left", "↖", "Top Left"],
+  ["top", "center", "↑", "Top Center"],
+  ["top", "right", "↗", "Top Right"],
+  ["middle", "left", "←", "Middle Left"],
+  ["middle", "center", "•", "Center"],
+  ["middle", "right", "→", "Middle Right"],
+  ["bottom", "left", "↙", "Bottom Left"],
+  ["bottom", "center", "↓", "Bottom Center"],
+  ["bottom", "right", "↘", "Bottom Right"],
+] as const;
+
+function PositionSelect<T extends PlacementConfig>({
+  config,
+  onChange,
+  disabled,
+}: Props<T>) {
+  const combobox = useCombobox({
+    onDropdownClose: () => combobox.resetSelectedOption(),
+  });
+  const [root, setRoot] = useState<HTMLDivElement | null>(null);
+  const controls = useRef<Record<string, HTMLDivElement | null>>({});
+  const vertical = config.verticalPosition ?? "middle";
+  const horizontal = config.horizontalPosition ?? "center";
+  const value = `${vertical}:${horizontal}`;
+  const label =
+    positions.find(
+      ([itemVertical, itemHorizontal]) =>
+        itemVertical === vertical && itemHorizontal === horizontal,
+    )?.[3] ?? "Center";
+
+  return (
+    <Combobox
+      store={combobox}
+      disabled={disabled}
+      onOptionSubmit={(nextValue) => {
+        const [verticalPosition, horizontalPosition] = nextValue.split(":") as [
+          PlacementConfig["verticalPosition"],
+          PlacementConfig["horizontalPosition"],
+        ];
+        onChange({ ...config, verticalPosition, horizontalPosition });
+        combobox.closeDropdown();
+      }}
+    >
+      <Combobox.Target>
+        <InputBase
+          component="button"
+          type="button"
+          label="Position"
+          pointer
+          success
+          disabled={disabled}
+          rightSection={<Combobox.Chevron />}
+          rightSectionPointerEvents="none"
+          onClick={() => combobox.toggleDropdown()}
+        >
+          {label}
+        </InputBase>
+      </Combobox.Target>
+
+      <Combobox.Dropdown>
+        <Combobox.Options>
+          <div
+            ref={setRoot}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: 6,
+              padding: 6,
+              position: "relative",
+            }}
+          >
+            <FloatingIndicator
+              target={controls.current[value]}
+              parent={root}
+              style={{
+                background: "var(--mantine-primary-color-filled)",
+                borderRadius: "var(--mantine-radius-sm)",
+                boxShadow: "var(--mantine-shadow-sm)",
+              }}
+            />
+            {positions.map(([itemVertical, itemHorizontal, icon, itemLabel]) => {
+              const itemValue = `${itemVertical}:${itemHorizontal}`;
+              return (
+                <Combobox.Option
+                  key={itemValue}
+                  value={itemValue}
+                  selected={itemValue === value}
+                  ref={(node) => {
+                    controls.current[itemValue] = node;
+                  }}
+                  aria-label={itemLabel}
+                  title={itemLabel}
+                  style={{
+                    alignItems: "center",
+                    aspectRatio: "1.6",
+                    display: "flex",
+                    fontSize: 22,
+                    justifyContent: "center",
+                    position: "relative",
+                    zIndex: 1,
+                  }}
+                >
+                  {icon}
+                </Combobox.Option>
+              );
+            })}
+          </div>
+        </Combobox.Options>
+      </Combobox.Dropdown>
+    </Combobox>
+  );
+}
 
 export default function Placement<T extends PlacementConfig>({
   config,
@@ -60,46 +184,11 @@ export default function Placement<T extends PlacementConfig>({
           </Input.Wrapper>
         </>
       ) : (
-        <>
-          <Input.Wrapper label="Vertical position">
-            <SegmentedControl
-              mt="xs"
-              fullWidth
-              disabled={disabled}
-              value={config.verticalPosition ?? "middle"}
-              onChange={(value) =>
-                set(
-                  "verticalPosition",
-                  value as PlacementConfig["verticalPosition"],
-                )
-              }
-              data={[
-                { label: "Top", value: "top" },
-                { label: "Middle", value: "middle" },
-                { label: "Bottom", value: "bottom" },
-              ]}
-            />
-          </Input.Wrapper>
-          <Input.Wrapper label="Horizontal position">
-            <SegmentedControl
-              mt="xs"
-              fullWidth
-              disabled={disabled}
-              value={config.horizontalPosition ?? "center"}
-              onChange={(value) =>
-                set(
-                  "horizontalPosition",
-                  value as PlacementConfig["horizontalPosition"],
-                )
-              }
-              data={[
-                { label: "Left", value: "left" },
-                { label: "Center", value: "center" },
-                { label: "Right", value: "right" },
-              ]}
-            />
-          </Input.Wrapper>
-        </>
+        <PositionSelect
+          config={config}
+          onChange={onChange}
+          disabled={disabled}
+        />
       )}
     </Stack>
   );

@@ -6,6 +6,17 @@ import type { GeometryConfig } from "./index";
 type Geometry = { id: number; name: string };
 type Workspace = { id: number; geometry_id: number; name: string };
 
+async function fetchOptions<T>(url: string): Promise<T> {
+  const response = await fetch(url);
+  if (!response.ok) {
+    const payload = (await response.json().catch(() => ({}))) as {
+      error?: string;
+    };
+    throw new Error(payload.error || `HTTP ${response.status}`);
+  }
+  return response.json() as Promise<T>;
+}
+
 export default function Editor({
   config,
   onChange,
@@ -17,27 +28,28 @@ export default function Editor({
 }) {
   const [geometries, setGeometries] = useState<Geometry[]>([]);
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     void Promise.all([
-      fetch("/api/geometry").then(
-        (response) => response.json() as Promise<Geometry[]>,
-      ),
-      fetch("/api/workspace").then(
-        (response) => response.json() as Promise<Workspace[]>,
-      ),
+      fetchOptions<Geometry[]>("/api/geometry"),
+      fetchOptions<Workspace[]>("/api/workspace"),
     ])
       .then(([geometryItems, workspaceItems]) => {
         if (!cancelled) {
           setGeometries(geometryItems);
           setWorkspaces(workspaceItems);
+          setError(null);
         }
       })
-      .catch(() => {
+      .catch((cause: unknown) => {
         if (!cancelled) {
           setGeometries([]);
           setWorkspaces([]);
+          setError(
+            cause instanceof Error ? cause.message : "Unable to load options",
+          );
         }
       });
     return () => {
@@ -73,6 +85,10 @@ export default function Editor({
           data={geometryOptions}
           value={config.geometryId == null ? null : String(config.geometryId)}
           disabled={disabled}
+          error={
+            error || (config.geometryId == null ? "Select a geometry" : undefined)
+          }
+          success={!error && config.geometryId != null}
           onChange={(value) =>
             onChange({
               ...config,
@@ -95,6 +111,8 @@ export default function Editor({
             config.workspaceId == null ? null : String(config.workspaceId)
           }
           disabled={disabled || config.geometryId == null}
+          error={error || undefined}
+          success={!error && config.geometryId != null}
           onChange={(value) =>
             onChange({
               ...config,
@@ -115,6 +133,7 @@ export default function Editor({
           ]}
           value={config.event ?? "down"}
           disabled={disabled}
+          success
           onChange={(value) =>
             onChange({ ...config, event: value === "up" ? "up" : "down" })
           }
