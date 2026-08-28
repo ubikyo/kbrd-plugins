@@ -12,6 +12,7 @@
     "./invoke-application": "./src/invoke-application/web/index.ts",
     "./invoke-geometry": "./src/invoke-geometry/web/index.ts",
     "./invoke-workspace": "./src/invoke-workspace/web/index.ts",
+    "./invoke-website": "./src/invoke-website/web/index.ts",
     "./web": "./src/web.ts"
   },
   "peerDependencies": {

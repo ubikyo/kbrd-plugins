@@ -1,0 +1,13 @@
+{
+  "id": "kbrd.invoke-website",
+  "name": "Website",
+  "version": "1.0.0",
+  "category": "Invoke",
+  "icon": "website",
+  "capabilities": ["action"],
+  "permissions": ["application"],
+  "defaultConfig": {
+    "url": "",
+    "browserId": null
+  }
+}

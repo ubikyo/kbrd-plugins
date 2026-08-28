@@ -1,6 +1,5 @@
 import {
   ColorInput,
-  Input,
   Slider,
   Stack,
 } from "@mantine/core";
@@ -38,32 +37,26 @@ export default function Editor({ config, onChange, disabled = false }: Props) {
     <Stack gap="md">
       <Placement config={config} onChange={onChange} disabled={disabled} />
       <PropertyRow label="Width" align="top">
-        <Input.Wrapper w="100%" description={`${config.width} %`}>
-          <Slider
-            labelAlwaysOn
-            mt="xl"
-            min={5}
-            max={100}
-            step={5}
-            value={config.width}
-            disabled={disabled}
-            onChange={(value) => set("width", value)}
-          />
-        </Input.Wrapper>
+        <Slider
+          w="100%"
+          min={5}
+          max={100}
+          step={5}
+          value={config.width}
+          disabled={disabled}
+          onChange={(value) => set("width", value)}
+        />
       </PropertyRow>
       <PropertyRow label="Height" align="top">
-        <Input.Wrapper w="100%" description={`${config.height} %`}>
-          <Slider
-            labelAlwaysOn
-            mt="xl"
-            min={5}
-            max={100}
-            step={5}
-            value={config.height}
-            disabled={disabled}
-            onChange={(value) => set("height", value)}
-          />
-        </Input.Wrapper>
+        <Slider
+          w="100%"
+          min={5}
+          max={100}
+          step={5}
+          value={config.height}
+          disabled={disabled}
+          onChange={(value) => set("height", value)}
+        />
       </PropertyRow>
       <PropertyRow label="Color">
         <ColorInput

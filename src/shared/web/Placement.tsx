@@ -1,6 +1,5 @@
 import {
   Combobox,
-  Input,
   InputBase,
   Slider,
   Stack,
@@ -154,36 +153,24 @@ export default function Placement<T extends PlacementConfig>({
       {config.precisePlacement ? (
         <>
           <PropertyRow label="X" align="top">
-            <Input.Wrapper
+            <Slider
               w="100%"
-              description={`${config.x ?? 50} %`}
-            >
-              <Slider
-                labelAlwaysOn
-                mt="xl"
-                min={0}
-                max={100}
-                value={config.x ?? 50}
-                disabled={disabled}
-                onChange={(value) => set("x", value)}
-              />
-            </Input.Wrapper>
+              min={0}
+              max={100}
+              value={config.x ?? 50}
+              disabled={disabled}
+              onChange={(value) => set("x", value)}
+            />
           </PropertyRow>
           <PropertyRow label="Y" align="top">
-            <Input.Wrapper
+            <Slider
               w="100%"
-              description={`${config.y ?? 50} %`}
-            >
-              <Slider
-                labelAlwaysOn
-                mt="xl"
-                min={0}
-                max={100}
-                value={config.y ?? 50}
-                disabled={disabled}
-                onChange={(value) => set("y", value)}
-              />
-            </Input.Wrapper>
+              min={0}
+              max={100}
+              value={config.y ?? 50}
+              disabled={disabled}
+              onChange={(value) => set("y", value)}
+            />
           </PropertyRow>
         </>
       ) : (

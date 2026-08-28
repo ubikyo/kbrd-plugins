@@ -244,8 +244,6 @@ export default function Editor({ config, onChange, disabled = false }: Props) {
       <PropertyRow label="Size" align="top">
         <Input.Wrapper w="100%" pb="sm">
           <Slider
-            labelAlwaysOn
-            mt="xl"
             min={2}
             max={12}
             step={0.1}

@@ -1,4 +1,4 @@
-import { FileInput, Input, Slider, Stack, Switch, Text } from "@mantine/core";
+import { FileInput, Slider, Stack, Switch, Text } from "@mantine/core";
 import { useState } from "react";
 
 import type { ImageConfig } from "./index";
@@ -84,19 +84,16 @@ export default function Editor({ config, onChange, disabled = false }: Props) {
       </PropertyRow>
       {!config.fullSize && (
         <PropertyRow label="Size" align="top">
-          <Input.Wrapper w="100%" description={`${config.size} %`}>
-            <Slider
-              labelAlwaysOn
-              mt="xl"
-              min={10}
-              max={150}
-              step={5}
-              marks={sizeMarks}
-              value={config.size}
-              disabled={disabled}
-              onChange={(value) => set("size", value)}
-            />
-          </Input.Wrapper>
+          <Slider
+            w="100%"
+            min={10}
+            max={150}
+            step={5}
+            marks={sizeMarks}
+            value={config.size}
+            disabled={disabled}
+            onChange={(value) => set("size", value)}
+          />
         </PropertyRow>
       )}
       {!config.fullSize && (

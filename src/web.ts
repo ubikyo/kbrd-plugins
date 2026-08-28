@@ -43,6 +43,11 @@ import {
   Renderer as ApplicationRenderer,
   manifest as applicationManifest,
 } from "./invoke-application/web";
+import {
+  Editor as WebsiteEditor,
+  Renderer as WebsiteRenderer,
+  manifest as websiteManifest,
+} from "./invoke-website/web";
 
 export { default as PropertyRow } from "./shared/web/PropertyRow";
 
@@ -91,5 +96,10 @@ export const plugins = [
     ...applicationManifest,
     Editor: ApplicationEditor,
     Renderer: ApplicationRenderer,
+  },
+  {
+    ...websiteManifest,
+    Editor: WebsiteEditor,
+    Renderer: WebsiteRenderer,
   },
 ];
