@@ -1,6 +1,5 @@
 import {
   Combobox,
-  FloatingIndicator,
   Input,
   InputBase,
   Slider,
@@ -8,7 +7,7 @@ import {
   Switch,
   useCombobox,
 } from "@mantine/core";
-import { useRef, useState } from "react";
+import PropertyRow from "./PropertyRow";
 
 export type PlacementConfig = {
   precisePlacement: boolean;
@@ -44,8 +43,6 @@ function PositionSelect<T extends PlacementConfig>({
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
   });
-  const [root, setRoot] = useState<HTMLDivElement | null>(null);
-  const controls = useRef<Record<string, HTMLDivElement | null>>({});
   const vertical = config.verticalPosition ?? "middle";
   const horizontal = config.horizontalPosition ?? "center";
   const value = `${vertical}:${horizontal}`;
@@ -68,63 +65,55 @@ function PositionSelect<T extends PlacementConfig>({
         combobox.closeDropdown();
       }}
     >
-      <Combobox.Target>
-        <InputBase
-          component="button"
-          type="button"
-          label="Position"
-          pointer
-          success
-          disabled={disabled}
-          rightSection={<Combobox.Chevron />}
-          rightSectionPointerEvents="none"
-          onClick={() => combobox.toggleDropdown()}
-        >
-          {label}
-        </InputBase>
-      </Combobox.Target>
+      <PropertyRow label="Position">
+        <Combobox.Target>
+          <InputBase
+            component="button"
+            type="button"
+            aria-label="Position"
+            w="100%"
+            pointer
+            success
+            disabled={disabled}
+            rightSection={<Combobox.Chevron />}
+            rightSectionPointerEvents="none"
+            onClick={() => combobox.toggleDropdown()}
+          >
+            {label}
+          </InputBase>
+        </Combobox.Target>
+      </PropertyRow>
 
       <Combobox.Dropdown>
         <Combobox.Options>
           <div
-            ref={setRoot}
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(3, 1fr)",
               gap: 6,
+              overflow: "hidden",
               padding: 6,
-              position: "relative",
             }}
           >
-            <FloatingIndicator
-              target={controls.current[value]}
-              parent={root}
-              style={{
-                background: "var(--mantine-primary-color-filled)",
-                borderRadius: "var(--mantine-radius-sm)",
-                boxShadow: "var(--mantine-shadow-sm)",
-              }}
-            />
             {positions.map(([itemVertical, itemHorizontal, icon, itemLabel]) => {
               const itemValue = `${itemVertical}:${itemHorizontal}`;
+              const selected = itemValue === value;
               return (
                 <Combobox.Option
                   key={itemValue}
                   value={itemValue}
-                  selected={itemValue === value}
-                  ref={(node) => {
-                    controls.current[itemValue] = node;
-                  }}
+                  selected={selected}
                   aria-label={itemLabel}
                   title={itemLabel}
                   style={{
                     alignItems: "center",
                     aspectRatio: "1.6",
+                    backgroundColor: selected
+                      ? "var(--mantine-primary-color-filled)"
+                      : undefined,
                     display: "flex",
                     fontSize: 22,
                     justifyContent: "center",
-                    position: "relative",
-                    zIndex: 1,
                   }}
                 >
                   {icon}
@@ -152,36 +141,50 @@ export default function Placement<T extends PlacementConfig>({
 
   return (
     <Stack gap="md">
-      <Switch
-        label="Precise placement"
-        checked={config.precisePlacement ?? false}
-        disabled={disabled}
-        onChange={(event) =>
-          set("precisePlacement", event.currentTarget.checked)
-        }
-      />
+      <PropertyRow label="Precise placement ?" align="center" compactControl>
+        <Switch
+          aria-label="Precise placement ?"
+          checked={config.precisePlacement ?? false}
+          disabled={disabled}
+          onChange={(event) =>
+            set("precisePlacement", event.currentTarget.checked)
+          }
+        />
+      </PropertyRow>
       {config.precisePlacement ? (
         <>
-          <Input.Wrapper label="X" description={`${config.x ?? 50} %`}>
-            <Slider
-              mt="xs"
-              min={0}
-              max={100}
-              value={config.x ?? 50}
-              disabled={disabled}
-              onChange={(value) => set("x", value)}
-            />
-          </Input.Wrapper>
-          <Input.Wrapper label="Y" description={`${config.y ?? 50} %`}>
-            <Slider
-              mt="xs"
-              min={0}
-              max={100}
-              value={config.y ?? 50}
-              disabled={disabled}
-              onChange={(value) => set("y", value)}
-            />
-          </Input.Wrapper>
+          <PropertyRow label="X" align="top">
+            <Input.Wrapper
+              w="100%"
+              description={`${config.x ?? 50} %`}
+            >
+              <Slider
+                labelAlwaysOn
+                mt="xl"
+                min={0}
+                max={100}
+                value={config.x ?? 50}
+                disabled={disabled}
+                onChange={(value) => set("x", value)}
+              />
+            </Input.Wrapper>
+          </PropertyRow>
+          <PropertyRow label="Y" align="top">
+            <Input.Wrapper
+              w="100%"
+              description={`${config.y ?? 50} %`}
+            >
+              <Slider
+                labelAlwaysOn
+                mt="xl"
+                min={0}
+                max={100}
+                value={config.y ?? 50}
+                disabled={disabled}
+                onChange={(value) => set("y", value)}
+              />
+            </Input.Wrapper>
+          </PropertyRow>
         </>
       ) : (
         <PositionSelect

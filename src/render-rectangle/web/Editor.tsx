@@ -7,6 +7,7 @@ import {
 
 import type { RectangleConfig } from "./index";
 import Placement from "../../shared/web/Placement";
+import PropertyRow from "../../shared/web/PropertyRow";
 
 const swatches = [
   "#ffffff",
@@ -36,43 +37,52 @@ export default function Editor({ config, onChange, disabled = false }: Props) {
   return (
     <Stack gap="md">
       <Placement config={config} onChange={onChange} disabled={disabled} />
-      <Input.Wrapper label="Width" description={`${config.width} %`}>
-        <Slider
-          mt="xs"
-          min={5}
-          max={100}
-          step={5}
-          value={config.width}
+      <PropertyRow label="Width" align="top">
+        <Input.Wrapper w="100%" description={`${config.width} %`}>
+          <Slider
+            labelAlwaysOn
+            mt="xl"
+            min={5}
+            max={100}
+            step={5}
+            value={config.width}
+            disabled={disabled}
+            onChange={(value) => set("width", value)}
+          />
+        </Input.Wrapper>
+      </PropertyRow>
+      <PropertyRow label="Height" align="top">
+        <Input.Wrapper w="100%" description={`${config.height} %`}>
+          <Slider
+            labelAlwaysOn
+            mt="xl"
+            min={5}
+            max={100}
+            step={5}
+            value={config.height}
+            disabled={disabled}
+            onChange={(value) => set("height", value)}
+          />
+        </Input.Wrapper>
+      </PropertyRow>
+      <PropertyRow label="Color">
+        <ColorInput
+          w="100%"
+          aria-label="Color"
+          format="hex"
+          value={config.color ?? "#ffffff"}
           disabled={disabled}
-          onChange={(value) => set("width", value)}
+          error={
+            /^#[0-9a-f]{6}$/i.test(config.color ?? "#ffffff")
+              ? undefined
+              : "Invalid color"
+          }
+          success={/^#[0-9a-f]{6}$/i.test(config.color ?? "#ffffff")}
+          swatches={swatches}
+          closeOnColorSwatchClick
+          onChange={(value) => set("color", value)}
         />
-      </Input.Wrapper>
-      <Input.Wrapper label="Height" description={`${config.height} %`}>
-        <Slider
-          mt="xs"
-          min={5}
-          max={100}
-          step={5}
-          value={config.height}
-          disabled={disabled}
-          onChange={(value) => set("height", value)}
-        />
-      </Input.Wrapper>
-      <ColorInput
-        label="Color"
-        format="hex"
-        value={config.color ?? "#ffffff"}
-        disabled={disabled}
-        error={
-          /^#[0-9a-f]{6}$/i.test(config.color ?? "#ffffff")
-            ? undefined
-            : "Invalid color"
-        }
-        success={/^#[0-9a-f]{6}$/i.test(config.color ?? "#ffffff")}
-        swatches={swatches}
-        closeOnColorSwatchClick
-        onChange={(value) => set("color", value)}
-      />
+      </PropertyRow>
     </Stack>
   );
 }

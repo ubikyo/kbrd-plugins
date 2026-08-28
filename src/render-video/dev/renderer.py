@@ -18,7 +18,7 @@ def render(key, config):
 
     def sync(*args):
         state = current_config[0]
-        if not state.get("media"):
+        if not current_source[0]:
             video.size = (0, 0)
             video.opacity = 0
             return
@@ -41,11 +41,12 @@ def render(key, config):
     def update(state):
         current_config[0] = state
         filename = state.get("media", "")
-        source = (
-            str(MEDIA_DIR / filename)
-            if filename and Path(filename).name == filename
-            else ""
-        )
+        media_path = MEDIA_DIR / filename
+        source = str(media_path) if (
+            filename
+            and Path(filename).name == filename
+            and media_path.is_file()
+        ) else ""
         playback = source
 
         if playback != current_source[0]:

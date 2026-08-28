@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import type { ImageConfig } from "./index";
 import Placement from "../../shared/web/Placement";
+import PropertyRow from "../../shared/web/PropertyRow";
 
 type Props = {
   config: ImageConfig;
@@ -53,40 +54,50 @@ export default function Editor({ config, onChange, disabled = false }: Props) {
 
   return (
     <Stack gap="md">
-      <FileInput
-        label="Image"
-        placeholder={config.media || "Choose an image"}
-        accept="image/png,image/jpeg,image/gif"
-        clearable={Boolean(config.media)}
-        disabled={disabled || uploading}
-        error={error || undefined}
-        success={Boolean(config.media) && !error}
-        onChange={(file) => void upload(file)}
-      />
-      {config.media && (
-        <Text size="xs" c="dimmed" truncate>
-          {config.name || config.media}
-        </Text>
-      )}
-      <Switch
-        label="Fill the entire element"
-        checked={config.fullSize}
-        disabled={disabled}
-        onChange={(event) => set("fullSize", event.currentTarget.checked)}
-      />
-      {!config.fullSize && (
-        <Input.Wrapper label="Size" description={`${config.size} %`}>
-          <Slider
-            mt="xs"
-            min={10}
-            max={150}
-            step={5}
-            marks={sizeMarks}
-            value={config.size}
-            disabled={disabled}
-            onChange={(value) => set("size", value)}
+      <PropertyRow label="Image">
+        <Stack gap={4}>
+          <FileInput
+            w="100%"
+            aria-label="Image"
+            placeholder={config.media || "Choose an image"}
+            accept="image/png,image/jpeg,image/gif"
+            clearable={Boolean(config.media)}
+            disabled={disabled || uploading}
+            error={error || undefined}
+            success={Boolean(config.media) && !error}
+            onChange={(file) => void upload(file)}
           />
-        </Input.Wrapper>
+          {config.media && (
+            <Text size="xs" c="dimmed" truncate>
+              {config.name || config.media}
+            </Text>
+          )}
+        </Stack>
+      </PropertyRow>
+      <PropertyRow label="Fill the entire element" align="center" compactControl>
+        <Switch
+          aria-label="Fill the entire element"
+          checked={config.fullSize}
+          disabled={disabled}
+          onChange={(event) => set("fullSize", event.currentTarget.checked)}
+        />
+      </PropertyRow>
+      {!config.fullSize && (
+        <PropertyRow label="Size" align="top">
+          <Input.Wrapper w="100%" description={`${config.size} %`}>
+            <Slider
+              labelAlwaysOn
+              mt="xl"
+              min={10}
+              max={150}
+              step={5}
+              marks={sizeMarks}
+              value={config.size}
+              disabled={disabled}
+              onChange={(value) => set("size", value)}
+            />
+          </Input.Wrapper>
+        </PropertyRow>
       )}
       {!config.fullSize && (
         <Placement config={config} onChange={onChange} disabled={disabled} />

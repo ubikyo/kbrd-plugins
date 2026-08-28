@@ -1,12 +1,8 @@
-import {
-  FileInput,
-  Stack,
-  Switch,
-  Text,
-} from "@mantine/core";
+import { FileInput, Stack, Switch } from "@mantine/core";
 import { useState } from "react";
 
 import type { VideoConfig } from "./index";
+import PropertyRow from "../../shared/web/PropertyRow";
 
 type Props = {
   config: VideoConfig;
@@ -55,32 +51,39 @@ export default function Editor({
 
   return (
     <Stack gap="md">
-      <FileInput
+      <PropertyRow
         label="Video"
         description="MP4/H.264 or transparent WebM/VP9, without audio"
-        placeholder={config.media || "Choose a video"}
-        accept="video/mp4,video/webm"
-        clearable={Boolean(config.media)}
-        disabled={disabled || uploading}
-        error={error || undefined}
-        success={Boolean(config.media) && !error}
-        onChange={(file) => void upload(file)}
-      />
-      {config.media && (
-        <Text size="xs" c="dimmed" truncate>
-          {config.name || config.media}
-        </Text>
-      )}
+      >
+        <Stack gap={4}>
+          <FileInput
+            w="100%"
+            aria-label="Video"
+            placeholder={config.name || "Choose a video"}
+            accept="video/mp4,video/webm"
+            clearable={Boolean(config.media)}
+            disabled={disabled || uploading}
+            error={error || undefined}
+            success={Boolean(config.media) && !error}
+            onChange={(file) => void upload(file)}
+          />
+        </Stack>
+      </PropertyRow>
       {targetType === "key" && (
-        <Switch
+        <PropertyRow
           label="Allow overflow outside the key"
           description="Keeps the video centered without clipping it to the key."
-          checked={config.unconstrained ?? false}
-          disabled={disabled}
-          onChange={(event) =>
-            set("unconstrained", event.currentTarget.checked)
-          }
-        />
+          compactControl
+        >
+          <Switch
+            aria-label="Allow overflow outside the key"
+            checked={config.unconstrained ?? false}
+            disabled={disabled}
+            onChange={(event) =>
+              set("unconstrained", event.currentTarget.checked)
+            }
+          />
+        </PropertyRow>
       )}
     </Stack>
   );

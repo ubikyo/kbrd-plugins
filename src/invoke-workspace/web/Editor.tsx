@@ -1,7 +1,8 @@
-import { Group, Select, Stack, Text } from "@mantine/core";
+import { Select, Stack } from "@mantine/core";
 import { useEffect, useState } from "react";
 
 import type { WorkspaceConfig } from "./index";
+import PropertyRow from "../../shared/web/PropertyRow";
 
 type Option = { value: string; label: string };
 type Geometry = { id: number; name: string };
@@ -58,10 +59,9 @@ export default function Editor({
 
   return (
     <Stack gap="md">
-      <Group justify="space-between" wrap="nowrap">
-        <Text size="sm">Workspace</Text>
+      <PropertyRow label="Workspace">
         <Select
-          w={160}
+          w="100%"
           size="xs"
           searchable
           placeholder="Select"
@@ -77,11 +77,10 @@ export default function Editor({
             onChange({ ...config, workspaceId: value ? Number(value) : null })
           }
         />
-      </Group>
-      <Group justify="space-between" wrap="nowrap">
-        <Text size="sm">Event</Text>
+      </PropertyRow>
+      <PropertyRow label="Event">
         <Select
-          w={160}
+          w="100%"
           size="xs"
           allowDeselect={false}
           data={[{ value: "down", label: "Down" }, { value: "up", label: "Up" }]}
@@ -92,7 +91,7 @@ export default function Editor({
             onChange({ ...config, event: value === "up" ? "up" : "down" })
           }
         />
-      </Group>
+      </PropertyRow>
     </Stack>
   );
 }

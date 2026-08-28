@@ -44,6 +44,8 @@ import {
   manifest as applicationManifest,
 } from "./invoke-application/web";
 
+export { default as PropertyRow } from "./shared/web/PropertyRow";
+
 export const plugins = [
   {
     ...labelManifest,

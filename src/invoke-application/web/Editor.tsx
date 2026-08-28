@@ -1,7 +1,8 @@
-import { Group, Select, Stack, Switch, Text } from "@mantine/core";
+import { Select, Stack, Switch } from "@mantine/core";
 import { useEffect, useMemo, useState } from "react";
 
 import type { ApplicationConfig } from "./index";
+import PropertyRow from "../../shared/web/PropertyRow";
 
 type Application = {
   id: string;
@@ -64,10 +65,9 @@ export default function Editor({
 
   return (
     <Stack gap="md">
-      <Group justify="space-between" wrap="nowrap">
-        <Text size="sm">Application</Text>
+      <PropertyRow label="Application">
         <Select
-          w={200}
+          w="100%"
           size="xs"
           searchable
           placeholder="Select"
@@ -91,19 +91,24 @@ export default function Editor({
             })
           }
         />
-      </Group>
-      <Switch
-        label="Quit on long press"
+      </PropertyRow>
+      <PropertyRow
+        label="Quit on long press ?"
         description="Hold the key for 0.8 seconds to quit the application"
-        checked={config.quitOnLongPress ?? false}
-        disabled={disabled || !selected?.canQuit}
-        onChange={(event) =>
-          onChange({
-            ...config,
-            quitOnLongPress: event.currentTarget.checked,
-          })
-        }
-      />
+        compactControl
+      >
+        <Switch
+          aria-label="Quit on long press ?"
+          checked={config.quitOnLongPress ?? false}
+          disabled={disabled || !selected?.canQuit}
+          onChange={(event) =>
+            onChange({
+              ...config,
+              quitOnLongPress: event.currentTarget.checked,
+            })
+          }
+        />
+      </PropertyRow>
     </Stack>
   );
 }

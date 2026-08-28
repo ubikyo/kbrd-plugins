@@ -1,6 +1,7 @@
-import { Group, MultiSelect, NumberInput, Select, Stack, Text } from "@mantine/core";
+import { MultiSelect, NumberInput, Select, Stack } from "@mantine/core";
 
 import type { KeystrokeConfig } from "./index";
+import PropertyRow from "../../shared/web/PropertyRow";
 
 const modifiers = [
   ["LEFT_CTRL", "Left Ctrl"],
@@ -71,9 +72,9 @@ export default function Editor({
 
   return (
     <Stack gap="md">
-      <Stack gap={6}>
-        <Text size="sm">Keys</Text>
+      <PropertyRow label="Keys">
         <MultiSelect
+          w="100%"
           searchable
           clearable
           data={data}
@@ -85,11 +86,10 @@ export default function Editor({
           success={keys.length > 0}
           onChange={(keys) => onChange({ ...config, keys })}
         />
-      </Stack>
-      <Group justify="space-between" wrap="nowrap">
-        <Text size="sm">Behavior</Text>
+      </PropertyRow>
+      <PropertyRow label="Behavior">
         <Select
-          w={160}
+          w="100%"
           size="xs"
           allowDeselect={false}
           data={[
@@ -103,12 +103,11 @@ export default function Editor({
             onChange({ ...config, behavior: value === "tap" ? "tap" : "hold" })
           }
         />
-      </Group>
+      </PropertyRow>
       {behavior === "tap" && (
-        <Group justify="space-between" wrap="nowrap">
-          <Text size="sm">Duration</Text>
+        <PropertyRow label="Duration">
           <NumberInput
-            w={160}
+            w="100%"
             size="xs"
             min={10}
             max={5000}
@@ -129,7 +128,7 @@ export default function Editor({
               onChange({ ...config, durationMs: Number(value) || 50 })
             }
           />
-        </Group>
+        </PropertyRow>
       )}
     </Stack>
   );

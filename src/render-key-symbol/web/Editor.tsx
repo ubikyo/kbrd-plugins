@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 
 import type { KeySymbolConfig } from "./index";
 import Placement from "../../shared/web/Placement";
+import PropertyRow from "../../shared/web/PropertyRow";
 import { fontSizeMarks, fontSizeValue } from "../../shared/web/fontSize";
 
 const swatches = [
@@ -170,19 +171,23 @@ export default function Editor({ config, onChange, disabled = false }: Props) {
 
   return (
     <Stack gap="md">
-      <Select
-        label="Font"
-        placeholder="Choose a font"
-        searchable
-        allowDeselect={false}
-        data={fonts}
-        value={config.font ?? "Inter_18pt-Regular.ttf"}
-        disabled={disabled}
-        error={fontsError || previewError || undefined}
-        success={!fontsError && !previewError && loadedFont === filename}
-        onChange={(value) => value && set("font", value)}
-      />
-      <Input.Wrapper label="Symbol">
+      <PropertyRow label="Font">
+        <Select
+          w="100%"
+          aria-label="Font"
+          placeholder="Choose a font"
+          searchable
+          allowDeselect={false}
+          data={fonts}
+          value={config.font ?? "Inter_18pt-Regular.ttf"}
+          disabled={disabled}
+          error={fontsError || previewError || undefined}
+          success={!fontsError && !previewError && loadedFont === filename}
+          onChange={(value) => value && set("font", value)}
+        />
+      </PropertyRow>
+      <PropertyRow label="Symbol">
+        <Input.Wrapper w="100%">
         <Box
           mt="xs"
           role="radiogroup"
@@ -234,30 +239,40 @@ export default function Editor({ config, onChange, disabled = false }: Props) {
           )?.[1] ??
             config.text}
         </Text>
-      </Input.Wrapper>
-      <Input.Wrapper label="Size" pb="sm">
-        <Slider
-          mt="xs"
-          min={2}
-          max={12}
-          step={0.1}
+        </Input.Wrapper>
+      </PropertyRow>
+      <PropertyRow label="Size" align="top">
+        <Input.Wrapper w="100%" pb="sm">
+          <Slider
+            labelAlwaysOn
+            mt="xl"
+            min={2}
+            max={12}
+            step={0.1}
+            disabled={disabled}
+            value={fontSizeValue(config.size)}
+            onChange={(value) => set("size", value)}
+            marks={fontSizeMarks}
+            styles={{
+              markLabel: { fontSize: 11, whiteSpace: "nowrap" },
+            }}
+          />
+        </Input.Wrapper>
+      </PropertyRow>
+      <PropertyRow label="Color">
+        <ColorInput
+          w="100%"
+          aria-label="Color"
+          format="hex"
+          value={config.color}
           disabled={disabled}
-          value={fontSizeValue(config.size)}
-          onChange={(value) => set("size", value)}
-          marks={fontSizeMarks}
+          error={/^#[0-9a-f]{6}$/i.test(config.color) ? undefined : "Invalid color"}
+          success={/^#[0-9a-f]{6}$/i.test(config.color)}
+          swatches={swatches}
+          closeOnColorSwatchClick
+          onChange={(value) => set("color", value)}
         />
-      </Input.Wrapper>
-      <ColorInput
-        label="Color"
-        format="hex"
-        value={config.color}
-        disabled={disabled}
-        error={/^#[0-9a-f]{6}$/i.test(config.color) ? undefined : "Invalid color"}
-        success={/^#[0-9a-f]{6}$/i.test(config.color)}
-        swatches={swatches}
-        closeOnColorSwatchClick
-        onChange={(value) => set("color", value)}
-      />
+      </PropertyRow>
       <Placement config={config} onChange={onChange} disabled={disabled} />
     </Stack>
   );
