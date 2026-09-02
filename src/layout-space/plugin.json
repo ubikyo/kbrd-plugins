@@ -1,0 +1,10 @@
+{
+  "id": "kbrd.layout-space",
+  "name": "Space",
+  "version": "1.0.0",
+  "category": "Layout",
+  "icon": "space",
+  "capabilities": ["layout"],
+  "permissions": [],
+  "defaultConfig": {}
+}

@@ -9,7 +9,6 @@ import {
 import { useEffect, useState } from "react";
 
 import type { LabelConfig } from "./index";
-import Placement from "../../shared/web/Placement";
 import PropertyRow from "../../shared/web/PropertyRow";
 import { fontSizeMarks, fontSizeValue } from "../../shared/web/fontSize";
 
@@ -41,7 +40,7 @@ function loadFonts() {
   return fontsRequest;
 }
 
-export default function Editor({ config, onChange, disabled = false }: Props) {
+export default function MappingEditor({ config, onChange, disabled = false }: Props) {
   const [fonts, setFonts] = useState<FontOption[]>([]);
   const [fontError, setFontError] = useState<string | null>(null);
 
@@ -129,11 +128,6 @@ export default function Editor({ config, onChange, disabled = false }: Props) {
           onChange={(value) => set("color", value)}
         />
       </PropertyRow>
-      <Placement
-        config={config}
-        onChange={onChange}
-        disabled={disabled}
-      />
     </Stack>
   );
 }

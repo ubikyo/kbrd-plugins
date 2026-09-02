@@ -2,7 +2,6 @@ import { FileInput, Slider, Stack, Switch, Text } from "@mantine/core";
 import { useState } from "react";
 
 import type { ImageConfig } from "./index";
-import Placement from "../../shared/web/Placement";
 import PropertyRow from "../../shared/web/PropertyRow";
 
 type Props = {
@@ -19,7 +18,7 @@ const sizeMarks = [
   { value: 125, label: "xl" },
 ];
 
-export default function Editor({ config, onChange, disabled = false }: Props) {
+export default function MappingEditor({ config, onChange, disabled = false }: Props) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
 
@@ -95,9 +94,6 @@ export default function Editor({ config, onChange, disabled = false }: Props) {
             onChange={(value) => set("size", value)}
           />
         </PropertyRow>
-      )}
-      {!config.fullSize && (
-        <Placement config={config} onChange={onChange} disabled={disabled} />
       )}
     </Stack>
   );

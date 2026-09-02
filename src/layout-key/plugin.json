@@ -1,0 +1,12 @@
+{
+  "id": "kbrd.layout-key",
+  "name": "Key",
+  "version": "1.0.0",
+  "category": "Layout",
+  "icon": "key",
+  "capabilities": ["layout"],
+  "permissions": [],
+  "defaultConfig": {
+    "keyMode": "momentary"
+  }
+}

@@ -19,7 +19,7 @@ async function fetchOptions<T>(url: string): Promise<T> {
   return response.json() as Promise<T>;
 }
 
-export default function Editor({
+export default function MappingEditor({
   config,
   onChange,
   disabled = false,

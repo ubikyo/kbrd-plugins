@@ -2,7 +2,7 @@
   "id": "kbrd.render-key-symbol",
   "name": "Key Symbol",
   "version": "1.0.0",
-  "category": "Render",
+  "category": "Display",
   "icon": "keyboard-command-key",
   "capabilities": ["render"],
   "permissions": [],

@@ -1,4 +1,4 @@
-import { FileInput, Stack, Switch } from "@mantine/core";
+import { FileInput, Stack } from "@mantine/core";
 import { useState } from "react";
 
 import type { VideoConfig } from "./index";
@@ -8,21 +8,15 @@ type Props = {
   config: VideoConfig;
   onChange: (value: VideoConfig) => void;
   disabled?: boolean;
-  targetType?: "key" | "background" | "space";
 };
 
-export default function Editor({
+export default function MappingEditor({
   config,
   onChange,
   disabled = false,
-  targetType,
 }: Props) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
-
-  function set<K extends keyof VideoConfig>(key: K, value: VideoConfig[K]) {
-    onChange({ ...config, [key]: value });
-  }
 
   async function upload(file: File | null) {
     if (!file) {
@@ -69,22 +63,6 @@ export default function Editor({
           />
         </Stack>
       </PropertyRow>
-      {targetType === "key" && (
-        <PropertyRow
-          label="Allow overflow outside the key"
-          description="Keeps the video centered without clipping it to the key."
-          compactControl
-        >
-          <Switch
-            aria-label="Allow overflow outside the key"
-            checked={config.unconstrained ?? false}
-            disabled={disabled}
-            onChange={(event) =>
-              set("unconstrained", event.currentTarget.checked)
-            }
-          />
-        </PropertyRow>
-      )}
     </Stack>
   );
 }

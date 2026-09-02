@@ -10,7 +10,7 @@ type Application = {
   canQuit: boolean;
 };
 
-export default function Editor({
+export default function MappingEditor({
   config,
   onChange,
   disabled = false,

@@ -2,7 +2,7 @@
   "id": "kbrd.render-label",
   "name": "Label",
   "version": "1.0.0",
-  "category": "Render",
+  "category": "Display",
   "icon": "label",
   "capabilities": ["render"],
   "permissions": [],

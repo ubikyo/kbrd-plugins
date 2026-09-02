@@ -2,7 +2,7 @@
   "id": "kbrd.render-video",
   "name": "Video",
   "version": "1.0.0",
-  "category": "Render",
+  "category": "Display",
   "icon": "movie",
   "capabilities": ["render"],
   "permissions": ["media"],

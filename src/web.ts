@@ -1,50 +1,72 @@
 import {
-  Editor as LabelEditor,
+  LayoutEditor as LayoutKeyLayoutEditor,
+  MappingEditor as LayoutKeyMappingEditor,
+  Renderer as LayoutKeyRenderer,
+  manifest as layoutKeyManifest,
+} from "./layout-key/web";
+import {
+  LayoutEditor as LayoutSpaceLayoutEditor,
+  MappingEditor as LayoutSpaceMappingEditor,
+  Renderer as LayoutSpaceRenderer,
+  manifest as layoutSpaceManifest,
+} from "./layout-space/web";
+import {
+  LayoutEditor as LabelLayoutEditor,
+  MappingEditor as LabelMappingEditor,
   Renderer as LabelRenderer,
   manifest as labelManifest,
 } from "./render-label/web";
 import {
-  Editor as KeySymbolEditor,
+  LayoutEditor as KeySymbolLayoutEditor,
+  MappingEditor as KeySymbolMappingEditor,
   Renderer as KeySymbolRenderer,
   manifest as keySymbolManifest,
 } from "./render-key-symbol/web";
 import {
-  Editor as ImageEditor,
+  LayoutEditor as ImageLayoutEditor,
+  MappingEditor as ImageMappingEditor,
   Renderer as ImageRenderer,
   manifest as imageManifest,
 } from "./render-image/web";
 import {
-  Editor as VideoEditor,
+  LayoutEditor as VideoLayoutEditor,
+  MappingEditor as VideoMappingEditor,
   Renderer as VideoRenderer,
   manifest as videoManifest,
 } from "./render-video/web";
 import {
-  Editor as RectangleEditor,
+  LayoutEditor as RectangleLayoutEditor,
+  MappingEditor as RectangleMappingEditor,
   Renderer as RectangleRenderer,
   manifest as rectangleManifest,
 } from "./render-rectangle/web";
 import {
-  Editor as WorkspaceEditor,
+  LayoutEditor as WorkspaceLayoutEditor,
+  MappingEditor as WorkspaceMappingEditor,
   Renderer as WorkspaceRenderer,
   manifest as workspaceManifest,
 } from "./invoke-workspace/web";
 import {
-  Editor as GeometryEditor,
+  LayoutEditor as GeometryLayoutEditor,
+  MappingEditor as GeometryMappingEditor,
   Renderer as GeometryRenderer,
   manifest as geometryManifest,
 } from "./invoke-geometry/web";
 import {
-  Editor as KeystrokeEditor,
+  LayoutEditor as KeystrokeLayoutEditor,
+  MappingEditor as KeystrokeMappingEditor,
   Renderer as KeystrokeRenderer,
   manifest as keystrokeManifest,
 } from "./invoke-keystroke/web";
 import {
-  Editor as ApplicationEditor,
+  LayoutEditor as ApplicationLayoutEditor,
+  MappingEditor as ApplicationMappingEditor,
   Renderer as ApplicationRenderer,
   manifest as applicationManifest,
 } from "./invoke-application/web";
 import {
-  Editor as WebsiteEditor,
+  LayoutEditor as WebsiteLayoutEditor,
+  MappingEditor as WebsiteMappingEditor,
   Renderer as WebsiteRenderer,
   manifest as websiteManifest,
 } from "./invoke-website/web";
@@ -53,53 +75,75 @@ export { default as PropertyRow } from "./shared/web/PropertyRow";
 
 export const plugins = [
   {
+    ...layoutKeyManifest,
+    LayoutEditor: LayoutKeyLayoutEditor,
+    MappingEditor: LayoutKeyMappingEditor,
+    Renderer: LayoutKeyRenderer,
+  },
+  {
+    ...layoutSpaceManifest,
+    LayoutEditor: LayoutSpaceLayoutEditor,
+    MappingEditor: LayoutSpaceMappingEditor,
+    Renderer: LayoutSpaceRenderer,
+  },
+  {
     ...labelManifest,
-    Editor: LabelEditor,
+    LayoutEditor: LabelLayoutEditor,
+    MappingEditor: LabelMappingEditor,
     Renderer: LabelRenderer,
   },
   {
     ...keySymbolManifest,
-    Editor: KeySymbolEditor,
+    LayoutEditor: KeySymbolLayoutEditor,
+    MappingEditor: KeySymbolMappingEditor,
     Renderer: KeySymbolRenderer,
   },
   {
     ...imageManifest,
-    Editor: ImageEditor,
+    LayoutEditor: ImageLayoutEditor,
+    MappingEditor: ImageMappingEditor,
     Renderer: ImageRenderer,
   },
   {
     ...videoManifest,
-    Editor: VideoEditor,
+    LayoutEditor: VideoLayoutEditor,
+    MappingEditor: VideoMappingEditor,
     Renderer: VideoRenderer,
   },
   {
     ...rectangleManifest,
-    Editor: RectangleEditor,
+    LayoutEditor: RectangleLayoutEditor,
+    MappingEditor: RectangleMappingEditor,
     Renderer: RectangleRenderer,
   },
   {
     ...workspaceManifest,
-    Editor: WorkspaceEditor,
+    LayoutEditor: WorkspaceLayoutEditor,
+    MappingEditor: WorkspaceMappingEditor,
     Renderer: WorkspaceRenderer,
   },
   {
     ...geometryManifest,
-    Editor: GeometryEditor,
+    LayoutEditor: GeometryLayoutEditor,
+    MappingEditor: GeometryMappingEditor,
     Renderer: GeometryRenderer,
   },
   {
     ...keystrokeManifest,
-    Editor: KeystrokeEditor,
+    LayoutEditor: KeystrokeLayoutEditor,
+    MappingEditor: KeystrokeMappingEditor,
     Renderer: KeystrokeRenderer,
   },
   {
     ...applicationManifest,
-    Editor: ApplicationEditor,
+    LayoutEditor: ApplicationLayoutEditor,
+    MappingEditor: ApplicationMappingEditor,
     Renderer: ApplicationRenderer,
   },
   {
     ...websiteManifest,
-    Editor: WebsiteEditor,
+    LayoutEditor: WebsiteLayoutEditor,
+    MappingEditor: WebsiteMappingEditor,
     Renderer: WebsiteRenderer,
   },
 ];

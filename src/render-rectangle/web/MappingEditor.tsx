@@ -5,7 +5,6 @@ import {
 } from "@mantine/core";
 
 import type { RectangleConfig } from "./index";
-import Placement from "../../shared/web/Placement";
 import PropertyRow from "../../shared/web/PropertyRow";
 
 const swatches = [
@@ -25,7 +24,7 @@ type Props = {
   disabled?: boolean;
 };
 
-export default function Editor({ config, onChange, disabled = false }: Props) {
+export default function MappingEditor({ config, onChange, disabled = false }: Props) {
   function set<K extends keyof RectangleConfig>(
     key: K,
     value: RectangleConfig[K],
@@ -35,7 +34,6 @@ export default function Editor({ config, onChange, disabled = false }: Props) {
 
   return (
     <Stack gap="md">
-      <Placement config={config} onChange={onChange} disabled={disabled} />
       <PropertyRow label="Width" align="top">
         <Slider
           w="100%"

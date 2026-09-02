@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "type": "module",
   "exports": {
+    "./layout-key": "./src/layout-key/web/index.ts",
+    "./layout-space": "./src/layout-space/web/index.ts",
     "./render-image": "./src/render-image/web/index.ts",
     "./render-video": "./src/render-video/web/index.ts",
     "./render-label": "./src/render-label/web/index.ts",

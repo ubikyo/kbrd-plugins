@@ -2,7 +2,7 @@
   "id": "kbrd.render-image",
   "name": "Image",
   "version": "1.0.0",
-  "category": "Render",
+  "category": "Display",
   "icon": "image",
   "capabilities": ["render"],
   "permissions": ["media"],
