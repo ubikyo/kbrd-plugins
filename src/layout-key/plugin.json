@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "category": "Layout",
   "icon": "key",
-  "capabilities": ["layout"],
+  "capabilities": ["layout", "mapping-visible", "mapping-target"],
   "permissions": [],
   "defaultConfig": {
     "keyMode": "momentary"
