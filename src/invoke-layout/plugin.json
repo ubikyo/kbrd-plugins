@@ -1,14 +1,14 @@
 {
-  "id": "kbrd.invoke-geometry",
-  "name": "Geometry",
+  "id": "kbrd.invoke-layout",
+  "name": "Layout",
   "version": "1.0.0",
   "category": "Invoke",
-  "icon": "geometry",
+  "icon": "layout",
   "capabilities": ["action"],
-  "permissions": ["geometry", "workspace"],
+  "permissions": ["layout", "layer"],
   "defaultConfig": {
-    "geometryId": null,
-    "workspaceId": null,
+    "layoutId": null,
+    "layerId": null,
     "event": "down"
   }
 }

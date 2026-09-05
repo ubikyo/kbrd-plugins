@@ -8,23 +8,23 @@ from kbrd_dev.config import API_URL
 
 class Controller:
     def __init__(self, config):
-        self.geometry_id = config.get("geometryId")
-        self.workspace_id = config.get("workspaceId")
+        self.layout_id = config.get("layoutId")
+        self.layer_id = config.get("layerId")
         self.event = "up" if config.get("event") == "up" else "down"
 
     def _activate(self, key):
         try:
-            geometry_id = int(self.geometry_id)
+            layout_id = int(self.layout_id)
         except (TypeError, ValueError):
             return
         try:
-            workspace_id = int(self.workspace_id)
+            layer_id = int(self.layer_id)
         except (TypeError, ValueError):
-            workspace_id = None
+            layer_id = None
 
         target = (
-            f"workspace/{workspace_id}" if workspace_id is not None
-            else f"geometry/{geometry_id}"
+            f"layer/{layer_id}" if layer_id is not None
+            else f"layout/{layout_id}"
         )
 
         def request():
@@ -36,7 +36,7 @@ class Controller:
                     ),
                     timeout=2,
                 ).close()
-                refresh = getattr(getattr(key, "parent", None), "_refresh_geometry", None)
+                refresh = getattr(getattr(key, "parent", None), "_refresh_layout", None)
                 if callable(refresh):
                     Clock.schedule_once(refresh)
             except (OSError, URLError):

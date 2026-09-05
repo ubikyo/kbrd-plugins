@@ -3,8 +3,8 @@ export { default as MappingEditor } from "./MappingEditor";
 export { default as Renderer } from "../../shared/web/ActionRenderer";
 export { default as manifest } from "../plugin.json";
 
-export type GeometryConfig = {
-  geometryId: number | null;
-  workspaceId: number | null;
+export type LayoutConfig = {
+  layoutId: number | null;
+  layerId: number | null;
   event: "down" | "up";
 };

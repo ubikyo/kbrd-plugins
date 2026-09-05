@@ -8,12 +8,12 @@ from kbrd_dev.config import API_URL
 
 class Controller:
     def __init__(self, config):
-        self.workspace_id = config.get("workspaceId")
+        self.layer_id = config.get("layerId")
         self.event = "up" if config.get("event") == "up" else "down"
 
     def _activate(self, key):
         try:
-            workspace_id = int(self.workspace_id)
+            layer_id = int(self.layer_id)
         except (TypeError, ValueError):
             return
 
@@ -21,12 +21,12 @@ class Controller:
             try:
                 urlopen(
                     Request(
-                        f"{API_URL}/api/workspace/{workspace_id}/activate",
+                        f"{API_URL}/api/layer/{layer_id}/activate",
                         method="PUT",
                     ),
                     timeout=2,
                 ).close()
-                refresh = getattr(getattr(key, "parent", None), "_refresh_geometry", None)
+                refresh = getattr(getattr(key, "parent", None), "_refresh_layout", None)
                 if callable(refresh):
                     Clock.schedule_once(refresh)
             except (OSError, URLError):

@@ -41,17 +41,17 @@ import {
   manifest as rectangleManifest,
 } from "./render-rectangle/web";
 import {
-  LayoutEditor as WorkspaceLayoutEditor,
-  MappingEditor as WorkspaceMappingEditor,
-  Renderer as WorkspaceRenderer,
-  manifest as workspaceManifest,
-} from "./invoke-workspace/web";
+  LayoutEditor as LayerLayoutEditor,
+  MappingEditor as LayerMappingEditor,
+  Renderer as LayerRenderer,
+  manifest as layerManifest,
+} from "./invoke-layer/web";
 import {
-  LayoutEditor as GeometryLayoutEditor,
-  MappingEditor as GeometryMappingEditor,
-  Renderer as GeometryRenderer,
-  manifest as geometryManifest,
-} from "./invoke-geometry/web";
+  LayoutEditor as LayoutLayoutEditor,
+  MappingEditor as LayoutMappingEditor,
+  Renderer as LayoutRenderer,
+  manifest as layoutManifest,
+} from "./invoke-layout/web";
 import {
   LayoutEditor as KeystrokeLayoutEditor,
   MappingEditor as KeystrokeMappingEditor,
@@ -117,16 +117,16 @@ export const plugins = [
     Renderer: RectangleRenderer,
   },
   {
-    ...workspaceManifest,
-    LayoutEditor: WorkspaceLayoutEditor,
-    MappingEditor: WorkspaceMappingEditor,
-    Renderer: WorkspaceRenderer,
+    ...layerManifest,
+    LayoutEditor: LayerLayoutEditor,
+    MappingEditor: LayerMappingEditor,
+    Renderer: LayerRenderer,
   },
   {
-    ...geometryManifest,
-    LayoutEditor: GeometryLayoutEditor,
-    MappingEditor: GeometryMappingEditor,
-    Renderer: GeometryRenderer,
+    ...layoutManifest,
+    LayoutEditor: LayoutLayoutEditor,
+    MappingEditor: LayoutMappingEditor,
+    Renderer: LayoutRenderer,
   },
   {
     ...keystrokeManifest,

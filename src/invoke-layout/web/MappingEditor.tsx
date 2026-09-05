@@ -1,11 +1,11 @@
 import { Select, Stack } from "@mantine/core";
 import { useEffect, useMemo, useState } from "react";
 
-import type { GeometryConfig } from "./index";
+import type { LayoutConfig } from "./index";
 import PropertyRow from "../../shared/web/PropertyRow";
 
-type Geometry = { id: number; name: string };
-type Workspace = { id: number; geometry_id: number; name: string };
+type Layout = { id: number; name: string };
+type Layer = { id: number; layout_id: number; name: string };
 
 async function fetchOptions<T>(url: string): Promise<T> {
   const response = await fetch(url);
@@ -23,31 +23,31 @@ export default function MappingEditor({
   onChange,
   disabled = false,
 }: {
-  config: GeometryConfig;
-  onChange: (value: GeometryConfig) => void;
+  config: LayoutConfig;
+  onChange: (value: LayoutConfig) => void;
   disabled?: boolean;
 }) {
-  const [geometries, setGeometries] = useState<Geometry[]>([]);
-  const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
+  const [layouts, setLayouts] = useState<Layout[]>([]);
+  const [layers, setLayers] = useState<Layer[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     void Promise.all([
-      fetchOptions<Geometry[]>("/api/geometry"),
-      fetchOptions<Workspace[]>("/api/workspace"),
+      fetchOptions<Layout[]>("/api/layout"),
+      fetchOptions<Layer[]>("/api/layer"),
     ])
-      .then(([geometryItems, workspaceItems]) => {
+      .then(([layoutItems, layerItems]) => {
         if (!cancelled) {
-          setGeometries(geometryItems);
-          setWorkspaces(workspaceItems);
+          setLayouts(layoutItems);
+          setLayers(layerItems);
           setError(null);
         }
       })
       .catch((cause: unknown) => {
         if (!cancelled) {
-          setGeometries([]);
-          setWorkspaces([]);
+          setLayouts([]);
+          setLayers([]);
           setError(
             cause instanceof Error ? cause.message : "Unable to load options",
           );
@@ -58,64 +58,64 @@ export default function MappingEditor({
     };
   }, []);
 
-  const geometryOptions = useMemo(
+  const layoutOptions = useMemo(
     () =>
-      geometries.map((item) => ({
+      layouts.map((item) => ({
         value: String(item.id),
         label: item.name,
       })),
-    [geometries],
+    [layouts],
   );
-  const workspaceOptions = useMemo(
+  const layerOptions = useMemo(
     () =>
-      workspaces
-        .filter((item) => item.geometry_id === config.geometryId)
+      layers
+        .filter((item) => item.layout_id === config.layoutId)
         .map((item) => ({ value: String(item.id), label: item.name })),
-    [config.geometryId, workspaces],
+    [config.layoutId, layers],
   );
 
   return (
     <Stack gap="md">
-      <PropertyRow label="Geometry">
+      <PropertyRow label="Layout">
         <Select
           w="100%"
           size="xs"
           searchable
           placeholder="Select"
-          data={geometryOptions}
-          value={config.geometryId == null ? null : String(config.geometryId)}
+          data={layoutOptions}
+          value={config.layoutId == null ? null : String(config.layoutId)}
           disabled={disabled}
           error={
-            error || (config.geometryId == null ? "Select a geometry" : undefined)
+            error || (config.layoutId == null ? "Select a layout" : undefined)
           }
-          success={!error && config.geometryId != null}
+          success={!error && config.layoutId != null}
           onChange={(value) =>
             onChange({
               ...config,
-              geometryId: value ? Number(value) : null,
-              workspaceId: null,
+              layoutId: value ? Number(value) : null,
+              layerId: null,
             })
           }
         />
       </PropertyRow>
-      <PropertyRow label="Workspace">
+      <PropertyRow label="Layer">
         <Select
           w="100%"
           size="xs"
           searchable
           clearable
-          placeholder="No workspace"
-          data={workspaceOptions}
+          placeholder="No layer"
+          data={layerOptions}
           value={
-            config.workspaceId == null ? null : String(config.workspaceId)
+            config.layerId == null ? null : String(config.layerId)
           }
-          disabled={disabled || config.geometryId == null}
+          disabled={disabled || config.layoutId == null}
           error={error || undefined}
-          success={!error && config.geometryId != null}
+          success={!error && config.layoutId != null}
           onChange={(value) =>
             onChange({
               ...config,
-              workspaceId: value ? Number(value) : null,
+              layerId: value ? Number(value) : null,
             })
           }
         />

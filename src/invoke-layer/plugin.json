@@ -1,13 +1,13 @@
 {
-  "id": "kbrd.invoke-workspace",
-  "name": "Workspace",
+  "id": "kbrd.invoke-layer",
+  "name": "Layer",
   "version": "1.0.0",
   "category": "Invoke",
-  "icon": "workspace",
+  "icon": "layer",
   "capabilities": ["action"],
-  "permissions": ["workspace"],
+  "permissions": ["layer"],
   "defaultConfig": {
-    "workspaceId": null,
+    "layerId": null,
     "event": "down"
   }
 }

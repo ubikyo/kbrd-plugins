@@ -1,12 +1,12 @@
 import { Select, Stack } from "@mantine/core";
 import { useEffect, useState } from "react";
 
-import type { WorkspaceConfig } from "./index";
+import type { LayerConfig } from "./index";
 import PropertyRow from "../../shared/web/PropertyRow";
 
 type Option = { value: string; label: string };
-type Geometry = { id: number; name: string };
-type Workspace = { id: number; geometry_id: number; name: string };
+type Layout = { id: number; name: string };
+type Layer = { id: number; layout_id: number; name: string };
 
 async function fetchOptions<T>(url: string): Promise<T> {
   const response = await fetch(url);
@@ -24,8 +24,8 @@ export default function MappingEditor({
   onChange,
   disabled = false,
 }: {
-  config: WorkspaceConfig;
-  onChange: (value: WorkspaceConfig) => void;
+  config: LayerConfig;
+  onChange: (value: LayerConfig) => void;
   disabled?: boolean;
 }) {
   const [options, setOptions] = useState<Option[]>([]);
@@ -34,15 +34,15 @@ export default function MappingEditor({
   useEffect(() => {
     let cancelled = false;
     void Promise.all([
-      fetchOptions<Geometry[]>("/api/geometry"),
-      fetchOptions<Workspace[]>("/api/workspace"),
-    ]).then(([geometries, workspaces]) => {
+      fetchOptions<Layout[]>("/api/layout"),
+      fetchOptions<Layer[]>("/api/layer"),
+    ]).then(([layouts, layers]) => {
       if (cancelled) return;
-      const names = new Map(geometries.map((item) => [item.id, item.name]));
+      const names = new Map(layouts.map((item) => [item.id, item.name]));
       setOptions(
-        workspaces.map((item) => ({
+        layers.map((item) => ({
           value: String(item.id),
-          label: `${names.get(item.geometry_id) ?? "Geometry"} / ${item.name}`,
+          label: `${names.get(item.layout_id) ?? "Layout"} / ${item.name}`,
         })),
       );
       setError(null);
@@ -50,7 +50,7 @@ export default function MappingEditor({
       if (!cancelled) {
         setOptions([]);
         setError(
-          cause instanceof Error ? cause.message : "Unable to load workspaces",
+          cause instanceof Error ? cause.message : "Unable to load layers",
         );
       }
     });
@@ -59,22 +59,22 @@ export default function MappingEditor({
 
   return (
     <Stack gap="md">
-      <PropertyRow label="Workspace">
+      <PropertyRow label="Layer">
         <Select
           w="100%"
           size="xs"
           searchable
           placeholder="Select"
           data={options}
-          value={config.workspaceId == null ? null : String(config.workspaceId)}
+          value={config.layerId == null ? null : String(config.layerId)}
           disabled={disabled}
           error={
             error ||
-            (config.workspaceId == null ? "Select a workspace" : undefined)
+            (config.layerId == null ? "Select a layer" : undefined)
           }
-          success={!error && config.workspaceId != null}
+          success={!error && config.layerId != null}
           onChange={(value) =>
-            onChange({ ...config, workspaceId: value ? Number(value) : null })
+            onChange({ ...config, layerId: value ? Number(value) : null })
           }
         />
       </PropertyRow>
