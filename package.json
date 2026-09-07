@@ -5,6 +5,7 @@
   "exports": {
     "./layout-key": "./src/layout-key/web/index.ts",
     "./layout-space": "./src/layout-space/web/index.ts",
+    "./render-key": "./src/render-key/web/index.ts",
     "./render-image": "./src/render-image/web/index.ts",
     "./render-video": "./src/render-video/web/index.ts",
     "./render-label": "./src/render-label/web/index.ts",

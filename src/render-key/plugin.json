@@ -1,0 +1,16 @@
+{
+  "id": "kbrd.render-key",
+  "name": "Key",
+  "version": "1.0.0",
+  "category": "Display",
+  "icon": "key",
+  "capabilities": ["render"],
+  "permissions": [],
+  "deletable": false,
+  "defaultConfig": {
+    "borderEnabled": true,
+    "borderColor": "#808080",
+    "borderStyle": "solid",
+    "borderWidth": 1
+  }
+}

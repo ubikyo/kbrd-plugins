@@ -11,6 +11,12 @@ import {
   manifest as layoutSpaceManifest,
 } from "./layout-space/web";
 import {
+  LayoutEditor as RenderKeyLayoutEditor,
+  MappingEditor as RenderKeyMappingEditor,
+  Renderer as RenderKeyRenderer,
+  manifest as renderKeyManifest,
+} from "./render-key/web";
+import {
   LayoutEditor as LabelLayoutEditor,
   MappingEditor as LabelMappingEditor,
   Renderer as LabelRenderer,
@@ -72,6 +78,10 @@ import {
 } from "./invoke-website/web";
 
 export { default as PropertyRow } from "./shared/web/PropertyRow";
+export { default as Color } from "./shared/web/ux/Color";
+export { default as Border } from "./shared/web/ux/Border";
+export type { BorderStyleValue, BorderValue } from "./shared/web/ux/Border";
+export { default as PropertyGroup } from "./shared/web/ux/PropertyGroup";
 
 export const plugins = [
   {
@@ -85,6 +95,12 @@ export const plugins = [
     LayoutEditor: LayoutSpaceLayoutEditor,
     MappingEditor: LayoutSpaceMappingEditor,
     Renderer: LayoutSpaceRenderer,
+  },
+  {
+    ...renderKeyManifest,
+    LayoutEditor: RenderKeyLayoutEditor,
+    MappingEditor: RenderKeyMappingEditor,
+    Renderer: RenderKeyRenderer,
   },
   {
     ...labelManifest,

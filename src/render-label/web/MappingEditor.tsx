@@ -1,31 +1,25 @@
-import {
-  ColorInput,
-  Input,
-  Select,
-  Slider,
-  Stack,
-  TextInput,
-} from "@mantine/core";
+import { Box, Group, Select, TextInput } from "@mantine/core";
+import { Color, PropertyGroup } from "@kbrd/plugins/web";
 import { useEffect, useState } from "react";
 
 import type { LabelConfig } from "./index";
-import PropertyRow from "../../shared/web/PropertyRow";
-import { fontSizeMarks, fontSizeValue } from "../../shared/web/fontSize";
+import { fontSizeOptions } from "../../shared/web/fontSize";
+import type { NamedFontSize } from "../../shared/web/fontSize";
 
-const swatches = [
-  "#ffffff",
-  "#adb5bd",
-  "#ff6b6b",
-  "#ffd43b",
-  "#51cf66",
-  "#339af0",
-  "#845ef7",
-  "#000000",
-];
+// The fields this editor's one property group owns — adding the group
+// writes all of them, removing it clears all of them, and the group counts
+// as present as soon as any one of them is stored.
+const TYPOGRAPHY_KEYS = ["text", "font", "size", "color"] as const;
 
 type Props = {
+  // Already merged over the plugin's `defaultConfig` by the host, so every
+  // field below has a value to show even when the instance stores none.
   config: LabelConfig;
-  onChange: (value: LabelConfig) => void;
+  // What the instance actually stores — the difference between "set to the
+  // default value" and "not set", which is what the property group's own
+  // open/closed state means. See `PluginEditorProps` in kbrd-web.
+  definedConfig?: Partial<LabelConfig>;
+  onChange: (value: Partial<LabelConfig>) => void;
   disabled?: boolean;
 };
 
@@ -40,7 +34,12 @@ function loadFonts() {
   return fontsRequest;
 }
 
-export default function MappingEditor({ config, onChange, disabled = false }: Props) {
+export default function MappingEditor({
+  config,
+  definedConfig,
+  onChange,
+  disabled = false,
+}: Props) {
   const [fonts, setFonts] = useState<FontOption[]>([]);
   const [fontError, setFontError] = useState<string | null>(null);
 
@@ -66,68 +65,85 @@ export default function MappingEditor({ config, onChange, disabled = false }: Pr
     };
   }, []);
 
+  // Every write builds on what's stored, not on the merged view — editing
+  // one field must not silently set every other one to its default.
+  const stored: Partial<LabelConfig> = definedConfig ?? config;
+
   function set<K extends keyof LabelConfig>(key: K, value: LabelConfig[K]) {
-    onChange({ ...config, [key]: value });
+    onChange({ ...stored, [key]: value });
+  }
+
+  const typographySet = TYPOGRAPHY_KEYS.some(
+    (key) => stored[key] !== undefined,
+  );
+
+  // `+` stores the values already on show (the defaults, unless something
+  // was set); `×` drops them again, leaving the renderer back on its own
+  // defaults.
+  function addTypography() {
+    const added: Partial<LabelConfig> = { ...stored };
+    for (const key of TYPOGRAPHY_KEYS) {
+      (added as Record<string, unknown>)[key] = config[key];
+    }
+    onChange(added);
+  }
+
+  function removeTypography() {
+    const remaining: Partial<LabelConfig> = { ...stored };
+    for (const key of TYPOGRAPHY_KEYS) delete remaining[key];
+    onChange(remaining);
   }
 
   return (
-    <Stack gap="md">
-      <PropertyRow label="Text">
-        <TextInput
-          w="100%"
-          aria-label="Text"
-          value={config.text}
-          disabled={disabled}
-          error={config.text.trim() ? undefined : "Text is required"}
-          success={Boolean(config.text.trim())}
-          onChange={(event) => set("text", event.currentTarget.value)}
-        />
-      </PropertyRow>
-      <PropertyRow label="Font">
+    <PropertyGroup
+      title="Typography"
+      active={typographySet}
+      onAdd={addTypography}
+      onRemove={removeTypography}
+    >
+      <TextInput
+        variant="unstyled"
+        size="xs"
+        aria-label="Text"
+        value={config.text}
+        disabled={disabled}
+        onChange={(event) => set("text", event.currentTarget.value)}
+      />
+      <Group gap="xs" wrap="nowrap" mt="xs">
         <Select
-          w="100%"
+          variant="unstyled"
+          size="xs"
+          style={{ flex: 1, minWidth: 0 }}
           aria-label="Font"
           placeholder="Choose a font"
           searchable
           allowDeselect={false}
           data={fonts}
-          value={config.font ?? "Inter_18pt-Regular.ttf"}
+          value={config.font}
           disabled={disabled}
           error={fontError || undefined}
-          success={!fontError && fonts.length > 0}
           onChange={(value) => value && set("font", value)}
         />
-      </PropertyRow>
-      <PropertyRow label="Size" align="top">
-        <Input.Wrapper w="100%" pb="sm">
-          <Slider
-            min={2}
-            max={12}
-            step={0.1}
-            disabled={disabled}
-            value={fontSizeValue(config.size)}
-            onChange={(value) => set("size", value)}
-            marks={fontSizeMarks}
-            styles={{
-              markLabel: { fontSize: 11, whiteSpace: "nowrap" },
-            }}
-          />
-        </Input.Wrapper>
-      </PropertyRow>
-      <PropertyRow label="Color">
-        <ColorInput
-          w="100%"
-          aria-label="Color"
-          format="hex"
+        <Select
+          variant="unstyled"
+          size="xs"
+          w={64}
+          aria-label="Size"
+          allowDeselect={false}
+          data={fontSizeOptions}
+          value={config.size}
+          disabled={disabled}
+          onChange={(value) => value && set("size", value as NamedFontSize)}
+        />
+      </Group>
+      <Box mt="xs">
+        <Color
+          aria-label="Text color"
           value={config.color}
           disabled={disabled}
-          error={/^#[0-9a-f]{6}$/i.test(config.color) ? undefined : "Invalid color"}
-          success={/^#[0-9a-f]{6}$/i.test(config.color)}
-          swatches={swatches}
-          closeOnColorSwatchClick
           onChange={(value) => set("color", value)}
         />
-      </PropertyRow>
-    </Stack>
+      </Box>
+    </PropertyGroup>
   );
 }
