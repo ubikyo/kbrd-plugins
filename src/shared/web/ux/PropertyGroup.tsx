@@ -3,24 +3,41 @@ import { useEffect, useState, type ReactNode } from "react";
 
 type Props = {
   title: string;
-  // Whether this property actually exists in the parent's own
-  // configuration right now — not a visual "is it open" flag (see
-  // `expanded` below, and this component's own module docblock).
-  active: boolean;
-  // Creates the property in the parent's configuration — e.g. seeding a
-  // fresh `autoLayout: {...}` object. Must be a real write, not just a
-  // visual toggle: `active` becoming `true` is expected to come from this
-  // having actually landed in the config, on the next render.
-  onAdd: () => void;
-  // Removes the property from the parent's configuration (deletes the
-  // key, or sets it to `undefined` — whichever this project's data model
-  // already uses elsewhere for "this optional property isn't set").
-  onRemove: () => void;
   // The property's own editor — only ever mounted while `active`, so it
   // never has to handle being asked to render a config that doesn't
   // exist yet.
   children: ReactNode;
-};
+} & (
+  | {
+      // An optional group: the three come as a set, and the header gets
+      // its `+`/`×` from them.
+      //
+      // `active` is whether this property actually exists in the parent's
+      // own configuration right now — not a visual "is it open" flag (see
+      // `expanded` below, and this component's own module docblock).
+      active: boolean;
+      // Creates the property in the parent's configuration — e.g. seeding
+      // a fresh `autoLayout: {...}` object. Must be a real write, not just
+      // a visual toggle: `active` becoming `true` is expected to come from
+      // this having actually landed in the config, on the next render.
+      onAdd: () => void;
+      // Removes the property from the parent's configuration (deletes the
+      // key, or sets it to `undefined` — whichever this project's data
+      // model already uses elsewhere for "this optional property isn't
+      // set").
+      onRemove: () => void;
+    }
+  | {
+      // A permanent group: nothing to add or remove, so the header is the
+      // title alone and the content is always on show. What a plugin's
+      // *own* subject is rather than an optional extra over it — an
+      // invoke plugin's action, say, which is the whole of why the
+      // instance is attached at all.
+      active?: never;
+      onAdd?: never;
+      onRemove?: never;
+    }
+);
 
 const GROUP_BORDER_STYLE = "1px solid var(--kbrd-border-color)";
 
@@ -35,6 +52,11 @@ const GROUP_BORDER_STYLE = "1px solid var(--kbrd-border-color)";
  * parent performs, not local state this component could fake — see this
  * file's own `active` prop doc.
  *
+ * Stating none of `active`/`onAdd`/`onRemove` makes a permanent group
+ * instead: the same header and framing, no `+`/`×`, content always on
+ * show — for a group that *is* the plugin's own subject rather than an
+ * optional extra over it (see `Props`).
+ *
  * `active` (does the property exist) and `expanded` (is the content
  * panel visually open) are deliberately kept distinct, even though today
  * one always drives the other one-to-one (adding opens it, removing
@@ -42,13 +64,11 @@ const GROUP_BORDER_STYLE = "1px solid var(--kbrd-border-color)";
  * collapsing an active group's content without removing the property)
  * doesn't need a rewrite, just a new way to call `setExpanded`.
  */
-export default function PropertyGroup({
-  title,
-  active,
-  onAdd,
-  onRemove,
-  children,
-}: Props) {
+export default function PropertyGroup(props: Props) {
+  const { title, children, onAdd, onRemove } = props;
+  // A permanent group states none of the three, and is exactly a group
+  // whose property is always there (see `Props`).
+  const active = props.active ?? true;
   const [expanded, setExpanded] = useState(active);
   // An open group's `×` only shows while the pointer is over the button
   // itself — removing a property is a deliberate gesture, and a row of
@@ -65,12 +85,12 @@ export default function PropertyGroup({
   }, [active]);
 
   function handleAdd() {
-    onAdd();
+    onAdd?.();
     setExpanded(true);
   }
 
   function handleRemove() {
-    onRemove();
+    onRemove?.();
     setExpanded(false);
   }
 
@@ -85,12 +105,13 @@ export default function PropertyGroup({
         justify="space-between"
         wrap="nowrap"
         gap="xs"
+        py={10}
         px={15}
         pr={10}
         // Tighter while open: the content below brings its own spacing, so
         // the full height only earns its keep on a closed group, where the
         // header is the whole row.
-        py={open ? 5 : 10}
+        pb={open ? 5 : 10}
       >
         <Text
           size="xs"
@@ -101,7 +122,8 @@ export default function PropertyGroup({
         >
           {title}
         </Text>
-        {active ? (
+        {/* Nothing to draw on a permanent group — see `Props`. */}
+        {!onAdd && !onRemove ? null : active ? (
           <ActionIcon
             variant="subtle"
             color="gray"

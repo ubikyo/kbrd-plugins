@@ -1,6 +1,8 @@
 import type { LabelConfig } from "./index";
 import { Fragment, useEffect, useId, useState } from "react";
 import { fontSizeValue } from "../../shared/web/fontSize";
+import { anchorParts } from "../../shared/web/ux/AnchorGrid";
+import { offsetIn } from "../../shared/web/geometry";
 
 const fontLoads = new Map<string, Promise<FontFace>>();
 
@@ -47,9 +49,12 @@ export default function Renderer({
     };
   }, [family, filename]);
 
+  // Which point of the text the coordinates address, while precise
+  // placement is on (see `AnchorGrid`).
+  const anchor = anchorParts(config.anchor);
   const px =
     config.precisePlacement
-      ? x + (width * (config.x ?? 50)) / 100
+      ? x + offsetIn(config.positionUnit, config.x, width)
       : config.horizontalPosition === "left"
       ? x + 2
       : config.horizontalPosition === "right"
@@ -57,7 +62,7 @@ export default function Renderer({
         : x + width / 2;
   const py =
     config.precisePlacement
-      ? y + (height * (config.y ?? 50)) / 100
+      ? y + offsetIn(config.positionUnit, config.y, height)
       : config.verticalPosition === "top"
       ? y + 2
       : config.verticalPosition === "bottom"
@@ -78,9 +83,23 @@ export default function Renderer({
       fill={config.color}
       fontSize={fontSizeValue(config.size)}
       fontFamily={loadedFont === filename ? family : "KBRD Inter"}
+      // The label's own font is a single face loaded by filename, with no
+      // bold or italic sibling registered alongside it — so these two lean
+      // on the browser's synthetic weight and slant rather than on a
+      // second file. Left off entirely when unset, so an unstyled label
+      // renders exactly as it did before these fields existed.
+      fontWeight={config.bold ? "bold" : undefined}
+      fontStyle={config.italic ? "italic" : undefined}
+      textDecoration={config.underline ? "underline" : undefined}
       textAnchor={
+        // Precise placement measures x/y from the cell's own top-left
+        // corner; the anchor says which point of the text lands on them.
         config.precisePlacement
-          ? "middle"
+          ? anchor.horizontal === "left"
+            ? "start"
+            : anchor.horizontal === "right"
+              ? "end"
+              : "middle"
           : config.horizontalPosition === "left"
           ? "start"
           : config.horizontalPosition === "right"
@@ -89,7 +108,11 @@ export default function Renderer({
       }
       dominantBaseline={
         config.precisePlacement
-          ? "central"
+          ? anchor.vertical === "top"
+            ? "hanging"
+            : anchor.vertical === "bottom"
+              ? "text-after-edge"
+              : "central"
           : config.verticalPosition === "top"
           ? "text-before-edge"
           : config.verticalPosition === "bottom"

@@ -8,8 +8,8 @@
   "permissions": [],
   "deletable": false,
   "defaultConfig": {
-    "borderEnabled": true,
-    "borderColor": "#808080",
+    "borderEnabled": false,
+    "borderColor": "#ffffff",
     "borderStyle": "solid",
     "borderWidth": 1
   }

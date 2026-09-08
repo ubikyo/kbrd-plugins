@@ -80,8 +80,55 @@ import {
 export { default as PropertyRow } from "./shared/web/PropertyRow";
 export { default as Color } from "./shared/web/ux/Color";
 export { default as Border } from "./shared/web/ux/Border";
+export { BORDER_DASHES } from "./shared/web/ux/Border";
 export type { BorderStyleValue, BorderValue } from "./shared/web/ux/Border";
 export { default as PropertyGroup } from "./shared/web/ux/PropertyGroup";
+export { default as NumberField } from "./shared/web/ux/NumberField";
+export { default as TextField } from "./shared/web/ux/TextField";
+export { default as IconToggle, ICON_SIZE } from "./shared/web/ux/IconToggle";
+export {
+  default as UnitSelect,
+  DEFAULT_UNIT,
+  UNIT_MAX,
+  UNIT_ORIGIN,
+} from "./shared/web/ux/UnitSelect";
+export type { Unit } from "./shared/web/ux/UnitSelect";
+export { default as AnchorGrid } from "./shared/web/ux/AnchorGrid";
+export {
+  ANCHOR_FACTORS,
+  anchorParts,
+} from "./shared/web/ux/AnchorGrid";
+export type {
+  AnchorValue,
+  AnchorVertical,
+  AnchorHorizontal,
+} from "./shared/web/ux/AnchorGrid";
+
+// The property blocks a plugin's Mapping editor is composed of — one
+// addable/removable group each, over whichever slice of the config it
+// owns. See `shared/web/blocks/block.ts`.
+export type { BlockProps } from "./shared/web/blocks/block";
+export { default as PositionBlock } from "./shared/web/blocks/Position";
+export {
+  DEFAULT_ANCHOR,
+  POSITION_KEYS,
+} from "./shared/web/blocks/Position";
+export type { PositionConfig } from "./shared/web/blocks/Position";
+export { default as DimensionBlock } from "./shared/web/blocks/Dimension";
+export { DIMENSION_KEYS } from "./shared/web/blocks/Dimension";
+export type { DimensionConfig } from "./shared/web/blocks/Dimension";
+export { default as TypographyBlock } from "./shared/web/blocks/Typography";
+export { TYPOGRAPHY_KEYS } from "./shared/web/blocks/Typography";
+export type { TypographyConfig } from "./shared/web/blocks/Typography";
+export { default as BackgroundBlock } from "./shared/web/blocks/Background";
+export {
+  BACKGROUND_KEYS,
+  DEFAULT_BACKGROUND_COLOR,
+} from "./shared/web/blocks/Background";
+export type { BackgroundConfig } from "./shared/web/blocks/Background";
+export { default as BorderBlock } from "./shared/web/blocks/Border";
+export { BORDER_KEYS } from "./shared/web/blocks/Border";
+export type { BorderConfig } from "./shared/web/blocks/Border";
 
 export const plugins = [
   {

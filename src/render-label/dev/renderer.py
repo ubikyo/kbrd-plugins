@@ -1,3 +1,4 @@
+import importlib.util
 from pathlib import Path
 
 from kivy.graphics import Color, Rectangle
@@ -13,6 +14,19 @@ BUNDLED_FONTS = Path("/usr/share/kbrd/fonts")
 DEFAULT_FONT = "Inter_18pt-Regular.ttf"
 COLOR_EMOJI_FONT = "NotoColorEmoji-Regular.ttf"
 COLOR_EMOJI_STRIKE = 109
+
+# `shared/dev/placement.py` lives next to this plugin, not inside the
+# `kbrd_dev` package, so it is loaded the same way `render-rectangle`
+# already loads it.
+_PLACEMENT_PATH = (
+    Path(__file__).resolve().parents[2] / "shared" / "dev" / "placement.py"
+)
+_SPEC = importlib.util.spec_from_file_location(
+    "kbrd_shared_dev_placement", _PLACEMENT_PATH
+)
+_MODULE = importlib.util.module_from_spec(_SPEC)
+_SPEC.loader.exec_module(_MODULE)
+resolve_anchored_position = _MODULE.resolve_anchored_position
 
 
 def font_path(filename):
@@ -63,31 +77,6 @@ def render(key, config):
 
     emoji_source = [None]
 
-    def aligned_position(width, height, inset, state):
-        if state.get("precisePlacement", False):
-            precise_x = max(0, min(100, float(state.get("x", 50)))) / 100
-            precise_y = max(0, min(100, float(state.get("y", 50)))) / 100
-            return (
-                key.x + max(0, key.width - width) * precise_x,
-                key.y + max(0, key.height - height) * (1 - precise_y),
-            )
-        horizontal = state.get("horizontalPosition", "center")
-        if horizontal == "left":
-            x = key.x + inset
-        elif horizontal == "right":
-            x = key.right - inset - width
-        else:
-            x = key.x + (key.width - width) / 2
-
-        vertical = state.get("verticalPosition", "middle")
-        if vertical == "top":
-            y = key.top - inset - height
-        elif vertical == "bottom":
-            y = key.y + inset
-        else:
-            y = key.y + (key.height - height) / 2
-        return x, y
-
     def sync(*args):
         state = current_config[0]
         size = state.get("size", "md")
@@ -99,6 +88,9 @@ def render(key, config):
         millimetres = getattr(key, "unit", "mm") == "mm"
         inset = mm(2) if millimetres else 2
         pixels = mm(font_size) if millimetres else font_size
+        # Pixels per unit of whatever the display is measured in — what a
+        # millimetre coordinate of the config is worth on screen.
+        unit_scale = mm(1) if millimetres else 1.0
         container.pos = key.pos
         container.size = key.size
 
@@ -120,7 +112,9 @@ def render(key, config):
                 emoji.texture.width * scale,
                 emoji.texture.height * scale,
             )
-            emoji.pos = aligned_position(*emoji.size, inset, state)
+            emoji.pos = resolve_anchored_position(
+                key, *emoji.size, state, unit_scale, inset
+            )
             return
 
         emoji.texture = None
@@ -131,7 +125,9 @@ def render(key, config):
             label.text_size = (None, None)
             label.texture_update()
             label.size = label.texture_size
-            label.pos = aligned_position(*label.size, inset, state)
+            label.pos = resolve_anchored_position(
+                key, *label.size, state, unit_scale, inset
+            )
         else:
             label.pos = (key.x + inset, key.y + inset)
             label.size = (
@@ -147,6 +143,16 @@ def render(key, config):
             label.text = str(state.get("text", ""))
             label.font_name = font_path(filename)
             label.color = get_color_from_hex(state.get("color", "#ffffff"))
+            # `underline` Kivy draws itself, so it works with any font.
+            # `bold`/`italic` it resolves through a *registered* font
+            # family, and `font_name` above is a bare .ttf path — so until
+            # the label's font is registered with its bold/italic siblings
+            # (LabelBase.register), these two set the intent without
+            # changing the glyphs. The web renderer has no such limit: the
+            # browser synthesises both.
+            label.bold = bool(state.get("bold", False))
+            label.italic = bool(state.get("italic", False))
+            label.underline = bool(state.get("underline", False))
             label.halign = {
                 "left": "left",
                 "center": "center",

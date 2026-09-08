@@ -1,79 +1,68 @@
-import {
-  ColorInput,
-  Slider,
-  Stack,
-} from "@mantine/core";
+import BackgroundBlock from "../../shared/web/blocks/Background";
+import BorderBlock from "../../shared/web/blocks/Border";
+import DimensionBlock from "../../shared/web/blocks/Dimension";
+import PositionBlock from "../../shared/web/blocks/Position";
 
 import type { RectangleConfig } from "./index";
-import PropertyRow from "../../shared/web/PropertyRow";
-
-const swatches = [
-  "#ffffff",
-  "#adb5bd",
-  "#ff6b6b",
-  "#ffd43b",
-  "#51cf66",
-  "#339af0",
-  "#845ef7",
-  "#000000",
-];
 
 type Props = {
+  // Already merged over the plugin's `defaultConfig` by the host, so every
+  // field below has a value to show even when the instance stores none.
   config: RectangleConfig;
-  onChange: (value: RectangleConfig) => void;
+  // What the instance actually stores — the difference between "set to the
+  // default value" and "not set", which is what a property group's own
+  // open/closed state means. See `PluginEditorProps` in kbrd-web.
+  definedConfig?: Partial<RectangleConfig>;
+  onChange: (value: Partial<RectangleConfig>) => void;
   disabled?: boolean;
 };
 
-export default function MappingEditor({ config, onChange, disabled = false }: Props) {
-  function set<K extends keyof RectangleConfig>(
-    key: K,
-    value: RectangleConfig[K],
-  ) {
-    onChange({ ...config, [key]: value });
-  }
+/**
+ * A rectangle is a filled, outlined box of some size somewhere in a cell,
+ * so its editor is the four shared blocks that say exactly those things
+ * (see `shared/web/blocks`): Position where it goes, Dimension how big it
+ * is, Background what fills it, Border what outlines it.
+ *
+ * Each one is optional in its own right: a rectangle with no Dimension
+ * group is the renderer's own default size, one with no Background falls
+ * back to the `color` the plugin stored before that block existed.
+ */
+export default function MappingEditor({
+  config,
+  definedConfig,
+  onChange,
+  disabled = false,
+}: Props) {
+  // Every write builds on what's stored, not on the merged view — editing
+  // one field must not silently set every other one to its default.
+  const stored: Partial<RectangleConfig> = definedConfig ?? config;
 
   return (
-    <Stack gap="md">
-      <PropertyRow label="Width" align="top">
-        <Slider
-          w="100%"
-          min={5}
-          max={100}
-          step={5}
-          value={config.width}
-          disabled={disabled}
-          onChange={(value) => set("width", value)}
-        />
-      </PropertyRow>
-      <PropertyRow label="Height" align="top">
-        <Slider
-          w="100%"
-          min={5}
-          max={100}
-          step={5}
-          value={config.height}
-          disabled={disabled}
-          onChange={(value) => set("height", value)}
-        />
-      </PropertyRow>
-      <PropertyRow label="Color">
-        <ColorInput
-          w="100%"
-          aria-label="Color"
-          format="hex"
-          value={config.color ?? "#ffffff"}
-          disabled={disabled}
-          error={
-            /^#[0-9a-f]{6}$/i.test(config.color ?? "#ffffff")
-              ? undefined
-              : "Invalid color"
-          }
-          success={/^#[0-9a-f]{6}$/i.test(config.color ?? "#ffffff")}
-          swatches={swatches}
-          closeOnColorSwatchClick
-          onChange={(value) => set("color", value)}
-        />
-      </PropertyRow>
-    </Stack>
+    <>
+      <PositionBlock
+        config={config}
+        stored={stored}
+        onChange={onChange}
+        disabled={disabled}
+      />
+      <DimensionBlock
+        config={config}
+        stored={stored}
+        onChange={onChange}
+        disabled={disabled}
+      />
+      <BackgroundBlock
+        config={config}
+        stored={stored}
+        onChange={onChange}
+        disabled={disabled}
+      />
+      <BorderBlock
+        config={config}
+        stored={stored}
+        onChange={onChange}
+        disabled={disabled}
+      />
+    </>
   );
 }
