@@ -1,0 +1,37 @@
+{
+  // Mirrors kbrd-web's own `tsconfig.app.json` — this package is consumed
+  // as source (see `exports` in package.json), so the settings its only
+  // consumer compiles it under are the ones it has to type-check clean
+  // against. Two differences, both earned:
+  //
+  //   - `resolveJsonModule`, because every plugin's `index.ts` re-exports
+  //     its own `plugin.json` manifest;
+  //   - `types: []` rather than `["vite/client"]`, because nothing in
+  //     this package touches `import.meta.env`.
+  "compilerOptions": {
+    "target": "ES2022",
+    "useDefineForClassFields": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "types": [],
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["src", ".storybook"]
+}

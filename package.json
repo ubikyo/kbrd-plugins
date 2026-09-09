@@ -2,6 +2,11 @@
   "name": "@kbrd/plugins",
   "version": "1.0.0",
   "type": "module",
+  "scripts": {
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "typecheck": "tsc -b"
+  },
   "exports": {
     "./layout-key": "./src/layout-key/web/index.ts",
     "./layout-space": "./src/layout-space/web/index.ts",
@@ -16,7 +21,8 @@
     "./invoke-layout": "./src/invoke-layout/web/index.ts",
     "./invoke-layer": "./src/invoke-layer/web/index.ts",
     "./invoke-website": "./src/invoke-website/web/index.ts",
-    "./web": "./src/web.ts"
+    "./web": "./src/web.ts",
+    "./theme": "./src/shared/web/theme.ts"
   },
   "peerDependencies": {
     "@mantine/core": "^9.5.2",
@@ -25,9 +31,16 @@
   },
   "devDependencies": {
     "@mantine/core": "9.5.2",
+    "@storybook/addon-docs": "^10.6.0",
+    "@storybook/react-vite": "^10.6.0",
     "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^5.2.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "react-icons": "^5.7.0"
+    "react-icons": "^5.7.0",
+    "storybook": "^10.6.0",
+    "typescript": "~5.9",
+    "vite": "^7.3.6"
   }
 }
