@@ -1,6 +1,6 @@
 {
   "id": "kbrd.invoke-layer",
-  "name": "Layer",
+  "name": "Set layer",
   "version": "1.0.0",
   "category": "Invoke",
   "icon": "layer",

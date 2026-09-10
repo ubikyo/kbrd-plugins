@@ -1,10 +1,14 @@
 import { NumberInput } from "@mantine/core";
 import { useEffect, useState, type ReactNode } from "react";
 
-import { leadRoom, leadSection } from "./lead";
+import { useLeadSection } from "./lead";
 
 type Props = {
-  value: number;
+  // The empty string is "no number to show" — a field whose config
+  // arrived without one, waiting to be given a value (see `error` below).
+  // Not something the field itself can be left on: an emptied field comes
+  // back to its last real value on blur.
+  value: number | "";
   onChange: (value: number) => void;
   min: number;
   max?: number;
@@ -13,14 +17,20 @@ type Props = {
   // block-level input has to be told).
   width: number | string;
   // A short white marker shown at the start of the field — "X", "Y", or a
-  // small icon — see `leadSection` for what it is and why it isn't
-  // Mantine's `prefix`.
+  // small icon — see `useLeadSection` for what it is and why it isn't
+  // Mantine's `prefix`. The gap between it and the value is the same for
+  // every field in these panels, whether the marker is a letter or a
+  // glyph, so there's nothing per-field to set here.
   lead?: ReactNode;
-  // Extra room after that marker, on top of the room its own length earns
-  // it — see `leadRoom`.
-  leadGap?: number;
   // Rendered inside the field, after the number — "%" and the like.
   suffix?: string;
+  // A red line under the field, for a number the panel can't accept —
+  // "no delay set", say. Same prop, same place, as the `error` every
+  // unstyled `Select` in these panels carries (see `invoke-layer`'s own
+  // layer select); most numeric fields have nothing to say here, since
+  // typing past either end lands back on the bound rather than being
+  // left to be rejected.
+  error?: string;
   disabled?: boolean;
   "aria-label": string;
 };
@@ -46,12 +56,13 @@ export default function NumberField({
   max,
   width,
   lead,
-  leadGap,
   suffix,
+  error,
   disabled = false,
   "aria-label": ariaLabel,
 }: Props) {
   const [draft, setDraft] = useState<string | number>(value);
+  const { section, room } = useLeadSection(lead);
 
   // Follows the value whenever it changes from somewhere else — another
   // state selected in the Properties tab, a config loaded in. While
@@ -73,9 +84,10 @@ export default function NumberField({
       clampBehavior="strict"
       allowDecimal={false}
       allowNegative={false}
-      leftSection={leadSection(lead)}
+      leftSection={section}
       leftSectionPointerEvents="none"
       suffix={suffix}
+      error={error}
       hideControls
       value={draft}
       disabled={disabled}
@@ -94,7 +106,7 @@ export default function NumberField({
         input: {
           background: "none",
           border: "none",
-          paddingInlineStart: leadRoom(lead, leadGap),
+          paddingInlineStart: room,
         },
         // Shrunk to the marker instead of being as wide as the field is
         // tall, which is what an untouched section would be — see `Color`.

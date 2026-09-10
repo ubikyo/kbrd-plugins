@@ -1,142 +1,46 @@
-import { Select, Stack } from "@mantine/core";
-import { useEffect, useMemo, useState } from "react";
-
+import Action from "./Action";
 import type { LayoutConfig } from "./index";
-import PropertyRow from "../../shared/web/PropertyRow";
 
-type Layout = { id: number; name: string };
-type Layer = { id: number; layout_id: number; name: string };
+type Props = {
+  // Already merged over the plugin's `defaultConfig` by the host, so every
+  // field below has a value to show even when the instance stores none.
+  config: LayoutConfig;
+  // What the instance actually stores — the difference between "set to the
+  // default value" and "not set", which is what a property group's own
+  // open/closed state means. See `PluginEditorProps` in kbrd-web.
+  definedConfig?: Partial<LayoutConfig>;
+  onChange: (value: Partial<LayoutConfig>) => void;
+  disabled?: boolean;
+};
 
-async function fetchOptions<T>(url: string): Promise<T> {
-  const response = await fetch(url);
-  if (!response.ok) {
-    const payload = (await response.json().catch(() => ({}))) as {
-      error?: string;
-    };
-    throw new Error(payload.error || `HTTP ${response.status}`);
-  }
-  return response.json() as Promise<T>;
-}
-
+/**
+ * Switching to a layout — and, within it, to one of its layers — is one
+ * thing, so this editor is the one block that says it: see `Action` for
+ * what it holds and why it lives here rather than in
+ * `shared/web/blocks`.
+ *
+ * One instance is one step: a key takes as many Invoke plugins as it's
+ * given, duplicates of the same kind included, and they run top to bottom
+ * in the order the Properties list shows them (each instance's own
+ * `position`, reorderable by its grip). So this editor never speaks for
+ * the key as a whole — only for the one step it belongs to.
+ */
 export default function MappingEditor({
   config,
+  definedConfig,
   onChange,
   disabled = false,
-}: {
-  config: LayoutConfig;
-  onChange: (value: LayoutConfig) => void;
-  disabled?: boolean;
-}) {
-  const [layouts, setLayouts] = useState<Layout[]>([]);
-  const [layers, setLayers] = useState<Layer[]>([]);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    void Promise.all([
-      fetchOptions<Layout[]>("/api/layout"),
-      fetchOptions<Layer[]>("/api/layer"),
-    ])
-      .then(([layoutItems, layerItems]) => {
-        if (!cancelled) {
-          setLayouts(layoutItems);
-          setLayers(layerItems);
-          setError(null);
-        }
-      })
-      .catch((cause: unknown) => {
-        if (!cancelled) {
-          setLayouts([]);
-          setLayers([]);
-          setError(
-            cause instanceof Error ? cause.message : "Unable to load options",
-          );
-        }
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  const layoutOptions = useMemo(
-    () =>
-      layouts.map((item) => ({
-        value: String(item.id),
-        label: item.name,
-      })),
-    [layouts],
-  );
-  const layerOptions = useMemo(
-    () =>
-      layers
-        .filter((item) => item.layout_id === config.layoutId)
-        .map((item) => ({ value: String(item.id), label: item.name })),
-    [config.layoutId, layers],
-  );
+}: Props) {
+  // Every write builds on what's stored, not on the merged view — editing
+  // one field must not silently set every other one to its default.
+  const stored: Partial<LayoutConfig> = definedConfig ?? config;
 
   return (
-    <Stack gap="md">
-      <PropertyRow label="Layout">
-        <Select
-          w="100%"
-          size="xs"
-          searchable
-          placeholder="Select"
-          data={layoutOptions}
-          value={config.layoutId == null ? null : String(config.layoutId)}
-          disabled={disabled}
-          error={
-            error || (config.layoutId == null ? "Select a layout" : undefined)
-          }
-          success={!error && config.layoutId != null}
-          onChange={(value) =>
-            onChange({
-              ...config,
-              layoutId: value ? Number(value) : null,
-              layerId: null,
-            })
-          }
-        />
-      </PropertyRow>
-      <PropertyRow label="Layer">
-        <Select
-          w="100%"
-          size="xs"
-          searchable
-          clearable
-          placeholder="No layer"
-          data={layerOptions}
-          value={
-            config.layerId == null ? null : String(config.layerId)
-          }
-          disabled={disabled || config.layoutId == null}
-          error={error || undefined}
-          success={!error && config.layoutId != null}
-          onChange={(value) =>
-            onChange({
-              ...config,
-              layerId: value ? Number(value) : null,
-            })
-          }
-        />
-      </PropertyRow>
-      <PropertyRow label="Event">
-        <Select
-          w="100%"
-          size="xs"
-          allowDeselect={false}
-          data={[
-            { value: "down", label: "Down" },
-            { value: "up", label: "Up" },
-          ]}
-          value={config.event ?? "down"}
-          disabled={disabled}
-          success
-          onChange={(value) =>
-            onChange({ ...config, event: value === "up" ? "up" : "down" })
-          }
-        />
-      </PropertyRow>
-    </Stack>
+    <Action
+      config={config}
+      stored={stored}
+      onChange={onChange}
+      disabled={disabled}
+    />
   );
 }

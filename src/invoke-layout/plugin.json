@@ -1,6 +1,6 @@
 {
   "id": "kbrd.invoke-layout",
-  "name": "Layout",
+  "name": "Set layout",
   "version": "1.0.0",
   "category": "Invoke",
   "icon": "layout",

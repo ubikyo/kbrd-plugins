@@ -1,6 +1,6 @@
 {
   "id": "kbrd.invoke-website",
-  "name": "Website",
+  "name": "Open a website",
   "version": "1.0.0",
   "category": "Invoke",
   "icon": "website",

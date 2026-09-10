@@ -40,9 +40,13 @@ const APPLICATIONS = [
   { id: "gimp", name: "GIMP", canQuit: false },
 ];
 
+// `isDefault` marks whichever one the machine itself opens a link with —
+// see `defaultBrowserID` in kbrd-agent. Safari here, the answer a Mac
+// gives until it's told otherwise.
 const BROWSERS = [
-  { id: "firefox", name: "Firefox" },
-  { id: "chromium", name: "Chromium" },
+  { id: "firefox", name: "Firefox", isDefault: false },
+  { id: "chromium", name: "Chromium", isDefault: false },
+  { id: "safari", name: "Safari", isDefault: true },
 ];
 
 // Keyed by pathname alone: no story sends a query string, and matching on

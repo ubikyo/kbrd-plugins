@@ -173,10 +173,6 @@ export default function Position<T extends PositionConfig>({
         <NumberField
           aria-label="X"
           lead="↔"
-          // The horizontal arrow is a good deal wider than the digit
-          // `leadRoom` sizes a marker by, so its value needs pushing
-          // clear of it.
-          leadGap={4}
           width={44}
           min={0}
           max={UNIT_MAX[unit]}

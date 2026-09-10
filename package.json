@@ -18,6 +18,7 @@
     "./render-rectangle": "./src/render-rectangle/web/index.ts",
     "./invoke-keystroke": "./src/invoke-keystroke/web/index.ts",
     "./invoke-application": "./src/invoke-application/web/index.ts",
+    "./invoke-delay": "./src/invoke-delay/web/index.ts",
     "./invoke-layout": "./src/invoke-layout/web/index.ts",
     "./invoke-layer": "./src/invoke-layer/web/index.ts",
     "./invoke-website": "./src/invoke-website/web/index.ts",

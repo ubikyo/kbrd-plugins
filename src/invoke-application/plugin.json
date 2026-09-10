@@ -1,6 +1,6 @@
 {
   "id": "kbrd.invoke-application",
-  "name": "Application",
+  "name": "Open an application",
   "version": "1.0.0",
   "category": "Invoke",
   "icon": "application",

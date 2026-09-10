@@ -1,10 +1,9 @@
-import { Box } from "@mantine/core";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import MappingEditor from "./MappingEditor";
 import type { ApplicationConfig } from "./index";
 import manifest from "../plugin.json";
-import { Controlled } from "../../shared/web/stories/harness";
+import { BlockHarness } from "../../shared/web/stories/harness";
 
 const meta = {
   title: "Plugins/invoke-application/MappingEditor",
@@ -13,12 +12,22 @@ const meta = {
     docs: {
       description: {
         component:
-          "Which application the key launches, and whether holding it " +
-          "quits that application instead.\n\n" +
+          "Launching an application is one thing, so this editor is the " +
+          "one block that says it: which application, and whether " +
+          "holding the key quits it instead.\n\n" +
+          "An *optional* group (see `PropertyGroup`), like every block " +
+          "in `shared/web/blocks`: a key carries as many actions as it " +
+          "is given — several of the same kind included, each one its " +
+          "own instance, run top to bottom in the order the Properties " +
+          "list shows them — so no single instance is the key's one " +
+          "behaviour, and closing the group hands its fields back to the " +
+          "manifest's `defaultConfig` for the state being edited.\n\n" +
           "The list comes from `GET /api/applications`, proxied to the " +
           "registered agent — each entry carrying its own `canQuit`, " +
-          "since not every application can be asked to. The three here " +
-          "are the Storybook stub's, one of which can't.",
+          "since not every application can be asked to quit. The three " +
+          "here are the Storybook stub's, one of which can't; the " +
+          "long-press answer is greyed out for that one, which is the " +
+          "whole of what the panel says about it.",
       },
     },
   },
@@ -27,43 +36,104 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const DEFAULTS = manifest.defaultConfig as ApplicationConfig;
+// The plugin's own manifest, exactly as the host merges it — no story
+// literal to drift from `plugin.json`.
+const DEFAULTS = manifest.defaultConfig as unknown as ApplicationConfig;
 
-const render = (initial: ApplicationConfig, disabled = false) =>
-  function Render() {
-    return (
-      <Box w={360}>
-        <Controlled<ApplicationConfig> initial={initial}>
-          {(config, onChange) => (
-            <MappingEditor
-              config={config}
-              onChange={onChange}
-              disabled={disabled}
-            />
-          )}
-        </Controlled>
-      </Box>
-    );
-  };
-
+/** A fresh instance: the group closed, nothing stored — this state says
+ * nothing, and the step does nothing. */
 export const Fresh: Story = {
   args: { config: DEFAULTS, onChange: () => {} },
-  render: render(DEFAULTS),
+  render: () => (
+    <BlockHarness<ApplicationConfig> defaults={DEFAULTS}>
+      {({ config, stored, onChange }) => (
+        <MappingEditor
+          config={config}
+          definedConfig={stored}
+          onChange={onChange}
+        />
+      )}
+    </BlockHarness>
+  ),
+};
+
+/** Just added, with `applicationId` stored as `null`: the group doesn't
+ * stay on its placeholder waiting to be answered — it takes the first
+ * application the list offers (Firefox, from the stub above) as soon as
+ * that list lands, so the step launches something the moment it's open.
+ * `null` is only what's shown while the list is still on its way, or has
+ * nothing in it at all. */
+export const Added: Story = {
+  ...Fresh,
+  render: () => (
+    <BlockHarness<ApplicationConfig>
+      defaults={DEFAULTS}
+      initialStored={{ applicationId: null, quitOnLongPress: false }}
+    >
+      {({ config, stored, onChange }) => (
+        <MappingEditor
+          config={config}
+          definedConfig={stored}
+          onChange={onChange}
+        />
+      )}
+    </BlockHarness>
+  ),
 };
 
 export const Configured: Story = {
   ...Fresh,
-  render: render({ applicationId: "firefox", quitOnLongPress: true }),
+  render: () => (
+    <BlockHarness<ApplicationConfig>
+      defaults={DEFAULTS}
+      initialStored={{ applicationId: "firefox", quitOnLongPress: true }}
+    >
+      {({ config, stored, onChange }) => (
+        <MappingEditor
+          config={config}
+          definedConfig={stored}
+          onChange={onChange}
+        />
+      )}
+    </BlockHarness>
+  ),
 };
 
-/** GIMP, which the stub marks `canQuit: false` — the long-press option
- * has nothing to offer for it. */
+/** GIMP, which the stub marks `canQuit: false` — the long-press answer
+ * has nothing to offer for it, so the question is greyed out with it. */
 export const CannotQuit: Story = {
   ...Fresh,
-  render: render({ applicationId: "gimp", quitOnLongPress: false }),
+  render: () => (
+    <BlockHarness<ApplicationConfig>
+      defaults={DEFAULTS}
+      initialStored={{ applicationId: "gimp", quitOnLongPress: false }}
+    >
+      {({ config, stored, onChange }) => (
+        <MappingEditor
+          config={config}
+          definedConfig={stored}
+          onChange={onChange}
+        />
+      )}
+    </BlockHarness>
+  ),
 };
 
 export const Disabled: Story = {
   ...Fresh,
-  render: render({ applicationId: "code", quitOnLongPress: false }, true),
+  render: () => (
+    <BlockHarness<ApplicationConfig>
+      defaults={DEFAULTS}
+      initialStored={{ applicationId: "code", quitOnLongPress: false }}
+    >
+      {({ config, stored, onChange }) => (
+        <MappingEditor
+          config={config}
+          definedConfig={stored}
+          onChange={onChange}
+          disabled
+        />
+      )}
+    </BlockHarness>
+  ),
 };

@@ -1,12 +1,14 @@
 import { TextInput } from "@mantine/core";
 
-import { leadRoom, leadSection } from "./lead";
+import { useLeadSection } from "./lead";
 
 type Props = {
   value: string;
   onChange: (value: string) => void;
   // A short white marker shown at the start of the field — "Text" — see
-  // `leadSection` for what it is and why it isn't Mantine's own prefix.
+  // `useLeadSection` for what it is and why it isn't Mantine's own
+  // prefix. The gap between it and the value is the same for every field
+  // in these panels, so there's nothing per-field to set here.
   lead?: string;
   placeholder?: string;
   disabled?: boolean;
@@ -32,6 +34,8 @@ export default function TextField({
   disabled = false,
   "aria-label": ariaLabel,
 }: Props) {
+  const { section, room } = useLeadSection(lead);
+
   return (
     <TextInput
       variant="unstyled"
@@ -39,7 +43,7 @@ export default function TextField({
       w="100%"
       aria-label={ariaLabel}
       placeholder={placeholder}
-      leftSection={leadSection(lead)}
+      leftSection={section}
       leftSectionPointerEvents="none"
       value={value}
       disabled={disabled}
@@ -48,7 +52,7 @@ export default function TextField({
         input: {
           background: "none",
           border: "none",
-          paddingInlineStart: leadRoom(lead),
+          paddingInlineStart: room,
         },
         // Shrunk to the marker instead of being as wide as the field is
         // tall, which is what an untouched section would be — see `Color`.

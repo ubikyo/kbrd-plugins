@@ -29,10 +29,12 @@ type Props = {
     }
   | {
       // A permanent group: nothing to add or remove, so the header is the
-      // title alone and the content is always on show. What a plugin's
-      // *own* subject is rather than an optional extra over it — an
-      // invoke plugin's action, say, which is the whole of why the
-      // instance is attached at all.
+      // title alone and the content is always on show. For a group whose
+      // fields have no meaningful "not set" — one an element could never
+      // be without, so there would be nothing for a `×` to hand back to.
+      // Rare: even an Invoke plugin's own action is optional (see
+      // `invoke-layer`'s `Action`), since a key runs a whole list of them
+      // and a step that says nothing is a legitimate thing to want.
       active?: never;
       onAdd?: never;
       onRemove?: never;
@@ -54,8 +56,8 @@ const GROUP_BORDER_STYLE = "1px solid var(--kbrd-border-color)";
  *
  * Stating none of `active`/`onAdd`/`onRemove` makes a permanent group
  * instead: the same header and framing, no `+`/`×`, content always on
- * show — for a group that *is* the plugin's own subject rather than an
- * optional extra over it (see `Props`).
+ * show — for a group whose fields have no meaningful "not set" at all
+ * (see `Props`).
  *
  * `active` (does the property exist) and `expanded` (is the content
  * panel visually open) are deliberately kept distinct, even though today

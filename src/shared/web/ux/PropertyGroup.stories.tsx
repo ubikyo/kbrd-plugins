@@ -74,12 +74,12 @@ export const AlreadyActive: Story = {
 
 /**
  * A permanent group: none of `active`/`onAdd`/`onRemove`, so no `+`/`×`
- * and the content is always on show. What a plugin's *own* subject is
- * rather than an optional extra over it — an invoke plugin's action,
- * say, which is the whole of why the instance is attached at all.
+ * and the content is always on show. For a group whose fields have no
+ * meaningful "not set" — one the element could never be without, so
+ * there would be nothing for a `×` to hand it back to.
  */
 export const Permanent: Story = {
-  args: { title: "Action", children: <Body /> },
+  args: { title: "Shape", children: <Body /> },
 };
 
 /**

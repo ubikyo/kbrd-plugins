@@ -1,0 +1,13 @@
+{
+  "id": "kbrd.invoke-delay",
+  "name": "Set a delay",
+  "version": "1.0.0",
+  "category": "Invoke",
+  "icon": "timer",
+  "capabilities": ["action"],
+  "permissions": [],
+  "defaultConfig": {
+    "delay": 200,
+    "delayUnit": "ms"
+  }
+}

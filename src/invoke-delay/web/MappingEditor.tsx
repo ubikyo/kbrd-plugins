@@ -1,28 +1,30 @@
 import Action from "./Action";
-import type { KeystrokeConfig } from "./index";
+import type { DelayConfig } from "./index";
 
 type Props = {
   // Already merged over the plugin's `defaultConfig` by the host, so every
   // field below has a value to show even when the instance stores none.
-  config: KeystrokeConfig;
+  config: DelayConfig;
   // What the instance actually stores — the difference between "set to the
   // default value" and "not set", which is what a property group's own
   // open/closed state means. See `PluginEditorProps` in kbrd-web.
-  definedConfig?: Partial<KeystrokeConfig>;
-  onChange: (value: Partial<KeystrokeConfig>) => void;
+  definedConfig?: Partial<DelayConfig>;
+  onChange: (value: Partial<DelayConfig>) => void;
   disabled?: boolean;
 };
 
 /**
- * Sending a combination is one thing, so this editor is the one block
- * that says it — see `Action` for what it holds and why it lives here
- * rather than in `shared/web/blocks`.
+ * Waiting is one thing, so this editor is the one block that says it —
+ * see `Action` for what it holds and why it lives here rather than in
+ * `shared/web/blocks`.
  *
  * One instance is one step: a key takes as many Invoke plugins as it's
  * given, duplicates of the same kind included, and they run top to bottom
  * in the order the Properties list shows them (each instance's own
  * `position`, reorderable by its grip). So this editor never speaks for
- * the key as a whole — only for the one step it belongs to.
+ * the key as a whole — only for the one step it belongs to, which for a
+ * delay is exactly the point: where the step sits is where the wait
+ * happens.
  */
 export default function MappingEditor({
   config,
@@ -32,7 +34,7 @@ export default function MappingEditor({
 }: Props) {
   // Every write builds on what's stored, not on the merged view — editing
   // one field must not silently set every other one to its default.
-  const stored: Partial<KeystrokeConfig> = definedConfig ?? config;
+  const stored: Partial<DelayConfig> = definedConfig ?? config;
 
   return (
     <Action

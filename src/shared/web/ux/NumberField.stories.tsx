@@ -33,8 +33,11 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// `number | ""` rather than `number`: the field's own value type, which
+// carries "nothing given yet" as the empty string — see the `Required`
+// story below.
 const render: Story["render"] = (args) => (
-  <Controlled<number> initial={args.value}>
+  <Controlled<number | ""> initial={args.value}>
     {(value, onChange) => (
       <NumberField {...args} value={value} onChange={onChange} />
     )}
@@ -53,7 +56,7 @@ export const WithSuffix: Story = {
 };
 
 /** The short white marker a coordinate pair leads with — see
- * `leadSection` for why it isn't Mantine's own `prefix`. */
+ * `useLeadSection` for why it isn't Mantine's own `prefix`. */
 export const WithTextLead: Story = {
   args: { ...Default.args, lead: "X" },
   render,
@@ -66,7 +69,6 @@ export const WithIconLead: Story = {
     ...Default.args,
     value: 8,
     lead: <MdHeight size={ICON_SIZE} />,
-    leadGap: 4,
   },
   render,
 };
@@ -74,4 +76,29 @@ export const WithIconLead: Story = {
 export const Disabled: Story = {
   args: { ...Default.args, disabled: true },
   render,
+};
+
+/** A required field whose config arrived without a number: the empty
+ * string is what "nothing given yet" looks like, and the `error` under it
+ * is what asks for one — see `invoke-delay`'s own `Action`. Type a value
+ * and the message goes with it. */
+export const Required: Story = {
+  args: {
+    ...Default.args,
+    value: "",
+    min: 1,
+    error: "Enter a delay",
+  },
+  render: (args) => (
+    <Controlled<number | ""> initial={args.value}>
+      {(value, onChange) => (
+        <NumberField
+          {...args}
+          value={value}
+          error={value === "" ? args.error : undefined}
+          onChange={onChange}
+        />
+      )}
+    </Controlled>
+  ),
 };

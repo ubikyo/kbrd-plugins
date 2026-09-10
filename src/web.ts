@@ -65,6 +65,12 @@ import {
   manifest as keystrokeManifest,
 } from "./invoke-keystroke/web";
 import {
+  LayoutEditor as DelayLayoutEditor,
+  MappingEditor as DelayMappingEditor,
+  Renderer as DelayRenderer,
+  manifest as delayManifest,
+} from "./invoke-delay/web";
+import {
   LayoutEditor as ApplicationLayoutEditor,
   MappingEditor as ApplicationMappingEditor,
   Renderer as ApplicationRenderer,
@@ -196,6 +202,12 @@ export const plugins = [
     LayoutEditor: KeystrokeLayoutEditor,
     MappingEditor: KeystrokeMappingEditor,
     Renderer: KeystrokeRenderer,
+  },
+  {
+    ...delayManifest,
+    LayoutEditor: DelayLayoutEditor,
+    MappingEditor: DelayMappingEditor,
+    Renderer: DelayRenderer,
   },
   {
     ...applicationManifest,
