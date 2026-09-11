@@ -44,6 +44,14 @@ const FIELD_HEIGHT = 30;
 // the same gesture, just an exclusive one.
 const RADIUS = 4;
 
+// Taken off the room `useLeadSection` leaves after each marker here: the
+// two markers name a *choice* rather than a value being typed, and the
+// select's own text starts further in than an input's does, so the
+// standard gap reads as a hole between the colon and the name it
+// introduces. Only these two fields, which is why it's subtracted at the
+// call site rather than changed in `lead`.
+const LEAD_TRIM = 8;
+
 // The gap between the two buttons. It only *is* the gap because each
 // button is exactly its glyph and nothing more (see the `label` style
 // below): give the button any box of its own and that box's own margin
@@ -295,7 +303,7 @@ export default function Action({
             // the marker takes at the start.
             styles={{
               input: {
-                paddingInlineStart: layoutLead.room,
+                paddingInlineStart: layoutLead.room - LEAD_TRIM,
                 paddingInlineEnd: 14,
               },
               section: { width: "auto" },
@@ -398,7 +406,7 @@ export default function Action({
             }
             styles={{
               input: {
-                paddingInlineStart: layerLead.room,
+                paddingInlineStart: layerLead.room - LEAD_TRIM,
                 paddingInlineEnd: 14,
               },
               section: { width: "auto" },

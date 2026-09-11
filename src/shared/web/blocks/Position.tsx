@@ -65,6 +65,13 @@ export const DEFAULT_ANCHOR: AnchorValue = "middle-center";
 // unrelated icon sets that happen to sit side by side.
 const QUARTER_TURN = -90;
 
+// Shorter than the 28px square `IconToggle` draws on its own: this row
+// sits under the coordinate fields it writes to, as their shortcut rather
+// than as a control of its own, and reads that way once it stops being
+// the tallest thing in the group. The glyphs stay at `ICON_SIZE`, so what
+// shrinks is the plate around them.
+const ALIGN_SIZE = 20;
+
 const ALIGNMENTS: {
   horizontal: {
     anchor: AnchorHorizontal;
@@ -214,6 +221,8 @@ export default function Position<T extends PositionConfig>({
               label={item.label}
               Icon={item.Icon}
               rotate={QUARTER_TURN}
+              size={ALIGN_SIZE}
+              filled
               active={anchor.horizontal === item.anchor && config.x === item.x}
               disabled={disabled || unit === "mm"}
               onClick={() =>
@@ -226,7 +235,7 @@ export default function Position<T extends PositionConfig>({
               holding nothing but the rule itself. */}
           <ActionIcon.GroupSection
             aria-hidden
-            size="md"
+            size={ALIGN_SIZE}
             w={11}
             px={0}
             style={
@@ -247,6 +256,8 @@ export default function Position<T extends PositionConfig>({
               key={item.anchor}
               label={item.label}
               Icon={item.Icon}
+              size={ALIGN_SIZE}
+              filled
               active={anchor.vertical === item.anchor && config.y === item.y}
               disabled={disabled || unit === "mm"}
               onClick={() =>

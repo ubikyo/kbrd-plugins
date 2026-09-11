@@ -33,6 +33,15 @@ export const DEFAULT_QUIT_ON_LONG_PRESS = false;
 // rather than the marker's own, which is measured.
 const ANSWER_WIDTH = 46;
 
+// Where each field's own value starts, measured from the field's left
+// edge: set here rather than taken from `useLeadSection`'s measured
+// `room`, which leaves these two markers a gap wider than they read
+// well with. The markers are fixed strings (`APPLICATION_LEAD` and
+// `QUIT_LEAD` below), so a figure each is as stable as a measurement —
+// but a reworded marker needs its figure redone by hand.
+const APPLICATION_ROOM = 42;
+const QUIT_ROOM = 115;
+
 // The white markers leading these two fields — the same gesture
 // `Typography` makes with "Text" (see `leadSection`), rather than labels
 // of their own outside the fields. Handed to `useLeadSection`, which
@@ -263,9 +272,9 @@ export default function Action({
           // has none of its own to build on.
           styles={{
             input: {
-              // The marker's measured width plus the gap every field in
-              // these panels puts after its own — see `useLeadSection`.
-              paddingInlineStart: applicationLead.room,
+              // Where "Open :" leaves off, as a figure of its own —
+              // see `APPLICATION_ROOM`.
+              paddingInlineStart: APPLICATION_ROOM,
               paddingInlineEnd: 14,
             },
             section: { width: "auto" },
@@ -286,7 +295,7 @@ export default function Action({
           // rule. The application above it does take the row — a
           // browser's or application's name is whatever the agent reports
           // it as.
-          w={quitLead.room + ANSWER_WIDTH}
+          w={QUIT_ROOM + ANSWER_WIDTH}
           aria-label="Quit on long press"
           leftSection={quitLead.section}
           // Decorative: the field's accessible name is its `aria-label`,
@@ -302,7 +311,7 @@ export default function Action({
           onChange={(value) => write({ quitOnLongPress: value === "yes" })}
           styles={{
             input: {
-              paddingInlineStart: quitLead.room,
+              paddingInlineStart: QUIT_ROOM,
               paddingInlineEnd: 14,
             },
             section: { width: "auto" },

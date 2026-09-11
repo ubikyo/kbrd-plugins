@@ -211,13 +211,19 @@ export default function Action({
           value={keys}
           maxValues={MAX_KEYS}
           disabled={disabled}
-          // Worth a red line, unlike a fresh application or browser: a
-          // step with no keys is not waiting on a list that hasn't landed
-          // — it is a step that will never send anything, and only the
-          // reader can fix it.
-          error={keys.length === 0 ? "Select at least one key" : undefined}
           onChange={(next) => write({ keys: next })}
-          styles={{ input: { paddingInlineEnd: 14 } }}
+          // The clear button is a `CloseButton`, which paints its own
+          // colour rather than inheriting the field's — so white has to be
+          // said here rather than in `styles`.
+          clearButtonProps={{ c: "white" }}
+          styles={(theme) => ({
+            input: { paddingInlineEnd: 14 },
+            pill: {
+              borderRadius: 5,
+              backgroundColor: theme.white,
+              color: theme.black,
+            },
+          })}
         />
         {/* The marker leads the field itself rather than labelling it from
             outside, exactly as `Typography` leads its own text with
