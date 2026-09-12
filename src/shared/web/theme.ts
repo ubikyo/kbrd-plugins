@@ -99,6 +99,13 @@ export const cssVariablesResolver: CSSVariablesResolver = () => ({
     "--kbrd-color-body": "#000000",
     "--kbrd-color-surface": "#222120",
     "--kbrd-border-color": "#333333",
+    // What a list is ruled with inside a panel: the grid the Media
+    // library is laid out on, the rules between the Inspector's plugin
+    // rows, the line under each property group's header. Well under the
+    // border above, which at that density reads as a cage around every
+    // row rather than as lines between them — a panel's own edges and
+    // anything drawn as a box in its own right keep that one.
+    "--kbrd-rule-color": "#1E1E1E",
     "--kbrd-border-alt": "#FFFFFF",
     // What "this is the one" is drawn in: a selected cell's outline in
     // `<Display>`, the drop mark a reordered property lands on. The SVG

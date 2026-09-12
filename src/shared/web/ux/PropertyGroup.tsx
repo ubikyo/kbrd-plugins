@@ -41,7 +41,10 @@ type Props = {
     }
 );
 
-const GROUP_BORDER_STYLE = "1px solid var(--kbrd-border-color)";
+// The line under each group, separating one block of properties from the
+// next — a list rule, drawn like every other in the panels this sits in
+// (see `--kbrd-rule-color` in `theme.ts`).
+const GROUP_BORDER_STYLE = "1px solid var(--kbrd-rule-color)";
 
 /**
  * One optional, addable/removable property group in a Properties-style
