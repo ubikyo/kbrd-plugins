@@ -151,11 +151,12 @@ export default function Action({
   const canQuit = selected?.canQuit ?? false;
 
   const applicationLead = useLeadSection(APPLICATION_LEAD);
-  // The one marker here that isn't simply white: an application the agent
-  // can't be asked to quit greys out the question along with its answer,
-  // which is the whole of what the panel says about it.
+  // The one marker here that isn't simply the panel's own foreground: an
+  // application the agent can't be asked to quit greys out the question
+  // along with its answer, which is the whole of what the panel says
+  // about it.
   const quitLead = useLeadSection(QUIT_LEAD, {
-    color: disabled || !canQuit ? "dimmed" : "#ffffff",
+    color: disabled || !canQuit ? "dimmed" : "var(--kbrd-color-contrast)",
   });
 
   // Every write builds on what's stored, never on the merged view — see

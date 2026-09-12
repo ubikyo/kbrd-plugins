@@ -23,7 +23,8 @@
     "./invoke-layer": "./src/invoke-layer/web/index.ts",
     "./invoke-website": "./src/invoke-website/web/index.ts",
     "./web": "./src/web.ts",
-    "./theme": "./src/shared/web/theme.ts"
+    "./theme": "./src/shared/web/theme.ts",
+    "./themes": "./src/shared/web/themes/index.ts"
   },
   "peerDependencies": {
     "@mantine/core": "^9.5.2",

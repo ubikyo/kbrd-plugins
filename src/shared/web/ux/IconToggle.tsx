@@ -11,35 +11,56 @@ export const ICON_SIZE = 16;
 // `ActionIcon.Group` alike — see the two style properties below.
 const RADIUS = 4;
 
+// `ActionIcon size="md"`, in pixels — what a button that states no `size`
+// of its own comes out as, and what a `glyph` face has to be measured
+// against when nothing else says how big the plate is.
+const DEFAULT_BOX = 28;
+
+// A glyph face is sized as a fraction of its own plate rather than
+// pinned to `ICON_SIZE` like an icon is, because the two are bounded by
+// different edges: an icon is a square and fits if its *height* does,
+// while "AA" is about 1.4 characters wide per character and runs out of
+// plate sideways first. At `ICON_SIZE` in a 20px button it would be
+// wider than the button itself. This ratio keeps roughly a character's
+// worth of air either side at every size the app actually uses.
+const GLYPH_RATIO = 0.62;
+
 // What "on" looks like. By default the border is the only thing saying
 // it: a white rule for on, and nothing at all for off — transparent
 // rather than absent, so switching one on doesn't shift the row by a
 // pixel.
 //
-// `filled` trades that rule for the plate itself, white ground and black
-// glyph. It's for rows where the buttons sit shoulder to shoulder inside
-// an `ActionIcon.Group` (the Position block's alignments): there the rule
-// is one of seven edges already drawn side by side, and the lit button
-// only reads as lit once it's painted. `--ai-hover` goes white with it,
-// so pointing at the button that's already on doesn't grey it back down.
+// `filled` trades that rule for the plate itself: the ground and the
+// glyph swap roles (`--kbrd-color-contrast` against `--kbrd-color-body`,
+// so white-on-black in the dark theme and black-on-white in the light
+// one). It's the louder of the two, and what a row wants whenever the
+// border alone doesn't carry: buttons sitting shoulder to shoulder
+// inside an `ActionIcon.Group` (the Position block's alignments), where
+// the rule is one of seven edges already drawn side by side; and small
+// plates (both of those rows are 20px), where there isn't enough edge
+// left for a 1px rule to say much. `--ai-hover` takes the same
+// colour, so pointing at the button that's already on doesn't grey it
+// back down.
 const stateVars = (active: boolean, filled: boolean) =>
   active && filled
     ? {
-        "--ai-bg": "#ffffff",
-        "--ai-hover": "#ffffff",
-        "--ai-color": "#000000",
-        "--ai-bd": "1px solid #ffffff",
+        "--ai-bg": "var(--kbrd-color-contrast)",
+        "--ai-hover": "var(--kbrd-color-contrast)",
+        "--ai-color": "var(--kbrd-color-body)",
+        "--ai-bd": "1px solid var(--kbrd-color-contrast)",
       }
     : {
         "--ai-bg": "transparent",
-        "--ai-bd": `1px solid ${active ? "#ffffff" : "transparent"}`,
+        "--ai-bd": `1px solid ${
+          active ? "var(--kbrd-color-contrast)" : "transparent"
+        }`,
       };
 
 type Props = {
-  // Both the accessible name and the native tooltip — these buttons carry
-  // no text of their own.
+  // Both the accessible name and the native tooltip — a button drawn from
+  // an icon carries no text of its own, and one drawn from a `glyph`
+  // carries a sample rather than a name ("AA" is not "Uppercase").
   label: string;
-  Icon: IconType;
   // Degrees to turn the glyph by, for a row built out of one glyph shown
   // at several angles (an alignment's up/down icons turned onto left and
   // right, a height marker turned into a width one).
@@ -53,6 +74,18 @@ type Props = {
   filled?: boolean;
   disabled?: boolean;
   onClick: () => void;
+  // The button's face, of which exactly one is given. `Icon` is the usual
+  // one; `glyph` is for a button whose face *is* text — the Typography
+  // block's casing and script toggles, where the option is best shown by
+  // an example of what it does ("Aa", "AA", "A²") and no icon says it
+  // half as directly.
+  //
+  // Both are optional rather than a discriminated union, which reads
+  // better but collapses under Storybook's own `Partial<Props>` args (a
+  // union of two objects, each forbidding the other's key, leaves no
+  // partial that can carry either). `Icon` wins if somehow both arrive.
+  Icon?: IconType;
+  glyph?: string;
 };
 
 /**
@@ -66,6 +99,7 @@ type Props = {
 export default function IconToggle({
   label,
   Icon,
+  glyph,
   rotate,
   active,
   size,
@@ -73,6 +107,8 @@ export default function IconToggle({
   disabled = false,
   onClick,
 }: Props) {
+  const glyphSize = Math.round((size ?? DEFAULT_BOX) * GLYPH_RATIO);
+
   return (
     <ActionIcon
       size={size ?? "md"}
@@ -99,10 +135,28 @@ export default function IconToggle({
       }
       onClick={onClick}
     >
-      <Icon
-        size={ICON_SIZE}
-        style={rotate ? { transform: `rotate(${rotate}deg)` } : undefined}
-      />
+      {Icon ? (
+        <Icon
+          size={ICON_SIZE}
+          style={rotate ? { transform: `rotate(${rotate}deg)` } : undefined}
+        />
+      ) : (
+        // `lineHeight: 1` so the face is exactly as tall as it is set,
+        // with none of the leading a line of text would carry; `nowrap`
+        // because a two-character face has to stay on one line even on
+        // the smallest plate rather than break in half.
+        <span
+          aria-hidden
+          style={{
+            fontSize: glyphSize,
+            lineHeight: 1,
+            whiteSpace: "nowrap",
+            transform: rotate ? `rotate(${rotate}deg)` : undefined,
+          }}
+        >
+          {glyph}
+        </span>
+      )}
     </ActionIcon>
   );
 }

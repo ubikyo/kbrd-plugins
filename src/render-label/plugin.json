@@ -13,6 +13,8 @@
     "bold": false,
     "italic": false,
     "underline": false,
+    "transform": "none",
+    "script": "none",
     "font": "Inter_18pt-Regular.ttf",
     "precisePlacement": false,
     "positionUnit": "%",

@@ -213,17 +213,19 @@ export default function Action({
           disabled={disabled}
           onChange={(next) => write({ keys: next })}
           // The clear button is a `CloseButton`, which paints its own
-          // colour rather than inheriting the field's — so white has to be
-          // said here rather than in `styles`.
-          clearButtonProps={{ c: "white" }}
-          styles={(theme) => ({
+          // colour rather than inheriting the field's — so the foreground
+          // has to be said here rather than in `styles`.
+          clearButtonProps={{ c: "var(--kbrd-color-contrast)" }}
+          styles={{
             input: { paddingInlineEnd: 14 },
+            // A pill reads as a filled chip: ground and text swap round,
+            // which the palette's own pair does in either theme.
             pill: {
               borderRadius: 5,
-              backgroundColor: theme.white,
-              color: theme.black,
+              backgroundColor: "var(--kbrd-color-contrast)",
+              color: "var(--kbrd-color-body)",
             },
-          })}
+          }}
         />
         {/* The marker leads the field itself rather than labelling it from
             outside, exactly as `Typography` leads its own text with

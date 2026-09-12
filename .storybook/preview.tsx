@@ -12,37 +12,63 @@ installApiStub();
 
 /**
  * The same provider `kbrd-web/src/main.tsx` wraps the app in — same
- * theme, same CSS variables, same forced dark scheme. Every control in
- * `ux/` is styled in terms of `--kbrd-color-body` / `--kbrd-border-color`
- * and draws as an invisible box without it, so this isn't decoration:
- * it's the minimum for a story to show the real component.
+ * theme, same CSS variables. Every control in `ux/` is styled in terms
+ * of `--kbrd-color-body` / `--kbrd-border-color` and draws as an
+ * invisible box without it, so this isn't decoration: it's the minimum
+ * for a story to show the real component.
+ *
+ * The scheme is a toolbar switch rather than the app's own `auto`: a
+ * story is there to be *looked at*, and both palettes have to be
+ * reachable on demand (see `src/shared/web/themes/`) — including on a
+ * machine whose OS is set to the other one. The canvas background
+ * follows it, since every one of these controls is drawn for the ground
+ * its own theme paints.
  */
 const preview: Preview = {
-  decorators: [
-    (Story) => (
-      <MantineProvider
-        theme={theme}
-        cssVariablesResolver={cssVariablesResolver}
-        forceColorScheme="dark"
-      >
-        <Story />
-      </MantineProvider>
-    ),
-  ],
-  parameters: {
-    // The app paints pure black everywhere (`--kbrd-color-body`), and
-    // these controls are drawn for that ground — a white canvas would
-    // hide every white-on-black border in the library.
-    backgrounds: {
-      options: {
-        kbrd: { name: "KBRD", value: "#000000" },
-        surface: { name: "Surface", value: "#222120" },
+  globalTypes: {
+    scheme: {
+      description: "Which KBRD palette the controls are drawn in",
+      toolbar: {
+        title: "Theme",
+        icon: "contrast",
+        items: [
+          { value: "dark", title: "Dark" },
+          { value: "light", title: "Light" },
+        ],
+        dynamicTitle: true,
       },
     },
-    controls: { expanded: true },
   },
   initialGlobals: {
-    backgrounds: { value: "kbrd" },
+    scheme: "dark",
+  },
+  decorators: [
+    (Story, context) => {
+      const scheme = context.globals.scheme === "light" ? "light" : "dark";
+      return (
+        <MantineProvider
+          theme={theme}
+          cssVariablesResolver={cssVariablesResolver}
+          forceColorScheme={scheme}
+        >
+          {/* The provider paints `--kbrd-color-body` onto the variables,
+              not onto the page — Storybook's own canvas is what's
+              actually behind a story, so the ground is set here. */}
+          <div
+            style={{
+              background: "var(--kbrd-color-body)",
+              color: "var(--kbrd-color-text)",
+              padding: 16,
+            }}
+          >
+            <Story />
+          </div>
+        </MantineProvider>
+      );
+    },
+  ],
+  parameters: {
+    controls: { expanded: true },
   },
 };
 

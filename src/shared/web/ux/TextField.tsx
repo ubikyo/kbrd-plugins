@@ -2,6 +2,10 @@ import { TextInput } from "@mantine/core";
 
 import { useLeadSection } from "./lead";
 
+/** Where the caret is, or what is selected, in UTF-16 offsets — the
+ * field's own units. `start === end` is a caret rather than a selection. */
+export type TextSelection = { start: number; end: number };
+
 type Props = {
   value: string;
   onChange: (value: string) => void;
@@ -13,6 +17,17 @@ type Props = {
   placeholder?: string;
   disabled?: boolean;
   "aria-label": string;
+  // What the caret or selection is doing, for a field whose *part* can be
+  // acted on — the Typography block, whose emphases apply to the selected
+  // characters alone. `null` means the field isn't focused, and the
+  // caller should fall back to treating the whole value as addressed.
+  //
+  // Reported from three events rather than one: `select` covers dragging
+  // and select-all, `keyUp` the arrow keys walking the caret through the
+  // text, and `click` a plain caret placement. They overlap heavily, and
+  // that is the point — between them there is no way to move the caret
+  // that goes unreported.
+  onSelectionChange?: (selection: TextSelection | null) => void;
 };
 
 /**
@@ -33,8 +48,15 @@ export default function TextField({
   placeholder,
   disabled = false,
   "aria-label": ariaLabel,
+  onSelectionChange,
 }: Props) {
   const { section, room } = useLeadSection(lead);
+
+  const report = (input: HTMLInputElement) =>
+    onSelectionChange?.({
+      start: input.selectionStart ?? 0,
+      end: input.selectionEnd ?? 0,
+    });
 
   return (
     <TextInput
@@ -47,7 +69,20 @@ export default function TextField({
       leftSectionPointerEvents="none"
       value={value}
       disabled={disabled}
-      onChange={(event) => onChange(event.currentTarget.value)}
+      onChange={(event) => {
+        onChange(event.currentTarget.value);
+        // After the change rather than before: typing moves the caret,
+        // and a row of buttons reading the character to its left has to
+        // be told about the character that was just typed.
+        report(event.currentTarget);
+      }}
+      onSelect={(event) => report(event.currentTarget)}
+      onKeyUp={(event) => report(event.currentTarget)}
+      onClick={(event) => report(event.currentTarget)}
+      onFocus={(event) => report(event.currentTarget)}
+      // Leaving the field addresses the whole value again — see
+      // `onSelectionChange`.
+      onBlur={() => onSelectionChange?.(null)}
       styles={{
         input: {
           background: "none",

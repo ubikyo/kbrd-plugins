@@ -213,12 +213,20 @@ export default function MappingEditor({ config, onChange, disabled = false }: Pr
                 onClick={() => set("text", displaySymbol)}
                 style={(theme) => ({
                   aspectRatio: "1",
+                  // The selected tile swaps ground and glyph, the way
+                  // every other "this is the one" in a panel does — the
+                  // palette's own pair rather than literal white/black,
+                  // so it inverts with the theme (see `themes/`).
                   border: `1px solid ${
-                    selected ? theme.white : "var(--kbrd-border-color)"
+                    selected
+                      ? "var(--kbrd-color-contrast)"
+                      : "var(--kbrd-border-color)"
                   }`,
                   borderRadius: theme.radius.xs,
-                  backgroundColor: selected ? theme.white : undefined,
-                  color: selected ? theme.black : undefined,
+                  backgroundColor: selected
+                    ? "var(--kbrd-color-contrast)"
+                    : undefined,
+                  color: selected ? "var(--kbrd-color-body)" : undefined,
                   fontFamily:
                     loadedFont === filename ? family : "KBRD Inter",
                   fontVariantEmoji: "text",

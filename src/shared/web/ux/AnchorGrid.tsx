@@ -93,9 +93,13 @@ export default function AnchorGrid({
                 // would come to 9px.
                 boxSizing: "border-box",
                 cursor: disabled ? "default" : "pointer",
-                backgroundColor: active ? "#ffffff" : "var(--kbrd-color-body)",
+                backgroundColor: active
+                  ? "var(--kbrd-color-contrast)"
+                  : "var(--kbrd-color-body)",
                 border: `1px solid ${
-                  active ? "#ffffff" : "var(--kbrd-border-color)"
+                  active
+                    ? "var(--kbrd-color-contrast)"
+                    : "var(--kbrd-border-color)"
                 }`,
               }}
             />

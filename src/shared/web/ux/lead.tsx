@@ -73,7 +73,10 @@ function estimateWidth(lead: ReactNode) {
  */
 export function useLeadSection(
   lead: ReactNode,
-  { color = "#ffffff", extra = 0 }: { color?: string; extra?: number } = {},
+  { color = "var(--kbrd-color-contrast)", extra = 0 }: {
+    color?: string;
+    extra?: number;
+  } = {},
 ) {
   const ref = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState<number | null>(null);
