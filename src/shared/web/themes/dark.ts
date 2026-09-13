@@ -13,6 +13,10 @@ export const darkPalette: KbrdPalette = {
   "--kbrd-color-surface": "#222120",
   "--kbrd-color-raised": "#1F1F1F",
   "--kbrd-color-hover": "#171717",
+  // Under pure black there is nowhere darker to go, so this one
+  // steps *up* by as little as it can and still be seen: a tray
+  // that reads as a group without competing with what sits in it.
+  "--kbrd-color-sunken": "#0F0F0F",
   "--kbrd-color-active": "#2E2E2E",
   "--kbrd-border-color": "#333333",
   "--kbrd-rule-color": "#1E1E1E",

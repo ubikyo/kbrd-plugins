@@ -28,6 +28,9 @@ export const lightPalette: KbrdPalette = {
   "--kbrd-color-surface": "#F2F1EF",
   "--kbrd-color-raised": "#EDECE9",
   "--kbrd-color-hover": "#F4F3F1",
+  // A step below `--kbrd-color-raised` rather than above it: here
+  // the ground is white, so a tray sunk into it is the darker one.
+  "--kbrd-color-sunken": "#E2E0DC",
   "--kbrd-color-active": "#DEDCD8",
   "--kbrd-border-color": "#C4C2BE",
   "--kbrd-rule-color": "#E6E4E0",

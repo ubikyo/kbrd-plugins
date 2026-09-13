@@ -24,6 +24,14 @@ export type KbrdPalette = {
   "--kbrd-color-raised": string;
   /** A row under the pointer. The quietest step off the ground there is. */
   "--kbrd-color-hover": string;
+  /**
+   * A tray sunk *into* the ground rather than raised off it: the setup
+   * wizard's strip of steps, which holds the step being answered the way
+   * a segmented control holds its segment. The only role that is darker
+   * than the ground under the dark theme and darker than it under the
+   * light one too — every other step in this list goes the other way.
+   */
+  "--kbrd-color-sunken": string;
   /** A tile being dropped on, or a button whose whole box lights up. */
   "--kbrd-color-active": string;
   /**
