@@ -18,7 +18,7 @@ const sizeMarks = [
   { value: 125, label: "xl" },
 ];
 
-export default function MappingEditor({ config, onChange, disabled = false }: Props) {
+export default function LayerEditor({ config, onChange, disabled = false }: Props) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
 

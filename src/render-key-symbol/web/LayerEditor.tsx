@@ -103,7 +103,7 @@ function loadFont(filename: string, family: string) {
   return request;
 }
 
-export default function MappingEditor({ config, onChange, disabled = false }: Props) {
+export default function LayerEditor({ config, onChange, disabled = false }: Props) {
   const [fonts, setFonts] = useState<FontOption[]>([]);
   const [fontsError, setFontsError] = useState<string | null>(null);
   const [previewError, setPreviewError] = useState<string | null>(null);

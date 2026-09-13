@@ -32,7 +32,7 @@ type Props = {
  * is also the one thing every attached plugin draws on top of (see
  * `LayoutCell` in kbrd-web).
  */
-export default function MappingEditor({
+export default function LayerEditor({
   config,
   definedConfig,
   onChange,

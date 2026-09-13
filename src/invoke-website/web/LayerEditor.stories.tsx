@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import MappingEditor from "./MappingEditor";
+import LayerEditor from "./LayerEditor";
 import type { WebsiteConfig } from "./index";
 import manifest from "../plugin.json";
 import { BlockHarness } from "../../shared/web/stories/harness";
 
 const meta = {
-  title: "Plugins/invoke-website/MappingEditor",
-  component: MappingEditor,
+  title: "Plugins/invoke-website/LayerEditor",
+  component: LayerEditor,
   parameters: {
     docs: {
       description: {
@@ -32,7 +32,7 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof MappingEditor>;
+} satisfies Meta<typeof LayerEditor>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -48,7 +48,7 @@ export const Fresh: Story = {
   render: () => (
     <BlockHarness<WebsiteConfig> defaults={DEFAULTS}>
       {({ config, stored, onChange }) => (
-        <MappingEditor
+        <LayerEditor
           config={config}
           definedConfig={stored}
           onChange={onChange}
@@ -71,7 +71,7 @@ export const Added: Story = {
       initialStored={{ url: "", browserId: null }}
     >
       {({ config, stored, onChange }) => (
-        <MappingEditor
+        <LayerEditor
           config={config}
           definedConfig={stored}
           onChange={onChange}
@@ -89,7 +89,7 @@ export const Configured: Story = {
       initialStored={{ url: "https://kbrd.dev", browserId: "firefox" }}
     >
       {({ config, stored, onChange }) => (
-        <MappingEditor
+        <LayerEditor
           config={config}
           definedConfig={stored}
           onChange={onChange}
@@ -107,7 +107,7 @@ export const Disabled: Story = {
       initialStored={{ url: "https://kbrd.dev", browserId: "chromium" }}
     >
       {({ config, stored, onChange }) => (
-        <MappingEditor
+        <LayerEditor
           config={config}
           definedConfig={stored}
           onChange={onChange}

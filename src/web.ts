@@ -1,84 +1,84 @@
 import {
   LayoutEditor as LayoutKeyLayoutEditor,
-  MappingEditor as LayoutKeyMappingEditor,
+  LayerEditor as LayoutKeyLayerEditor,
   Renderer as LayoutKeyRenderer,
   manifest as layoutKeyManifest,
 } from "./layout-key/web";
 import {
   LayoutEditor as LayoutSpaceLayoutEditor,
-  MappingEditor as LayoutSpaceMappingEditor,
+  LayerEditor as LayoutSpaceLayerEditor,
   Renderer as LayoutSpaceRenderer,
   manifest as layoutSpaceManifest,
 } from "./layout-space/web";
 import {
   LayoutEditor as RenderKeyLayoutEditor,
-  MappingEditor as RenderKeyMappingEditor,
+  LayerEditor as RenderKeyLayerEditor,
   Renderer as RenderKeyRenderer,
   manifest as renderKeyManifest,
 } from "./render-key/web";
 import {
   LayoutEditor as LabelLayoutEditor,
-  MappingEditor as LabelMappingEditor,
+  LayerEditor as LabelLayerEditor,
   Renderer as LabelRenderer,
   manifest as labelManifest,
 } from "./render-label/web";
 import {
   LayoutEditor as KeySymbolLayoutEditor,
-  MappingEditor as KeySymbolMappingEditor,
+  LayerEditor as KeySymbolLayerEditor,
   Renderer as KeySymbolRenderer,
   manifest as keySymbolManifest,
 } from "./render-key-symbol/web";
 import {
   LayoutEditor as ImageLayoutEditor,
-  MappingEditor as ImageMappingEditor,
+  LayerEditor as ImageLayerEditor,
   Renderer as ImageRenderer,
   manifest as imageManifest,
 } from "./render-image/web";
 import {
   LayoutEditor as VideoLayoutEditor,
-  MappingEditor as VideoMappingEditor,
+  LayerEditor as VideoLayerEditor,
   Renderer as VideoRenderer,
   manifest as videoManifest,
 } from "./render-video/web";
 import {
   LayoutEditor as RectangleLayoutEditor,
-  MappingEditor as RectangleMappingEditor,
+  LayerEditor as RectangleLayerEditor,
   Renderer as RectangleRenderer,
   manifest as rectangleManifest,
 } from "./render-rectangle/web";
 import {
   LayoutEditor as LayerLayoutEditor,
-  MappingEditor as LayerMappingEditor,
+  LayerEditor as LayerLayerEditor,
   Renderer as LayerRenderer,
   manifest as layerManifest,
 } from "./invoke-layer/web";
 import {
   LayoutEditor as LayoutLayoutEditor,
-  MappingEditor as LayoutMappingEditor,
+  LayerEditor as LayoutLayerEditor,
   Renderer as LayoutRenderer,
   manifest as layoutManifest,
 } from "./invoke-layout/web";
 import {
   LayoutEditor as KeystrokeLayoutEditor,
-  MappingEditor as KeystrokeMappingEditor,
+  LayerEditor as KeystrokeLayerEditor,
   Renderer as KeystrokeRenderer,
   manifest as keystrokeManifest,
 } from "./invoke-keystroke/web";
 import {
   LayoutEditor as DelayLayoutEditor,
-  MappingEditor as DelayMappingEditor,
+  LayerEditor as DelayLayerEditor,
   Renderer as DelayRenderer,
   manifest as delayManifest,
 } from "./invoke-delay/web";
 import {
   LayoutEditor as ApplicationLayoutEditor,
-  MappingEditor as ApplicationMappingEditor,
+  LayerEditor as ApplicationLayerEditor,
   Renderer as ApplicationRenderer,
   manifest as applicationManifest,
 } from "./invoke-application/web";
 import {
   LayoutEditor as WebsiteLayoutEditor,
-  MappingEditor as WebsiteMappingEditor,
+  LayerEditor as WebsiteLayerEditor,
   Renderer as WebsiteRenderer,
   manifest as websiteManifest,
 } from "./invoke-website/web";
@@ -110,7 +110,7 @@ export type {
   AnchorHorizontal,
 } from "./shared/web/ux/AnchorGrid";
 
-// The property blocks a plugin's Mapping editor is composed of — one
+// The property blocks a plugin's Layer editor is composed of — one
 // addable/removable group each, over whichever slice of the config it
 // owns. See `shared/web/blocks/block.ts`.
 export type { BlockProps } from "./shared/web/blocks/block";
@@ -140,85 +140,85 @@ export const plugins = [
   {
     ...layoutKeyManifest,
     LayoutEditor: LayoutKeyLayoutEditor,
-    MappingEditor: LayoutKeyMappingEditor,
+    LayerEditor: LayoutKeyLayerEditor,
     Renderer: LayoutKeyRenderer,
   },
   {
     ...layoutSpaceManifest,
     LayoutEditor: LayoutSpaceLayoutEditor,
-    MappingEditor: LayoutSpaceMappingEditor,
+    LayerEditor: LayoutSpaceLayerEditor,
     Renderer: LayoutSpaceRenderer,
   },
   {
     ...renderKeyManifest,
     LayoutEditor: RenderKeyLayoutEditor,
-    MappingEditor: RenderKeyMappingEditor,
+    LayerEditor: RenderKeyLayerEditor,
     Renderer: RenderKeyRenderer,
   },
   {
     ...labelManifest,
     LayoutEditor: LabelLayoutEditor,
-    MappingEditor: LabelMappingEditor,
+    LayerEditor: LabelLayerEditor,
     Renderer: LabelRenderer,
   },
   {
     ...keySymbolManifest,
     LayoutEditor: KeySymbolLayoutEditor,
-    MappingEditor: KeySymbolMappingEditor,
+    LayerEditor: KeySymbolLayerEditor,
     Renderer: KeySymbolRenderer,
   },
   {
     ...imageManifest,
     LayoutEditor: ImageLayoutEditor,
-    MappingEditor: ImageMappingEditor,
+    LayerEditor: ImageLayerEditor,
     Renderer: ImageRenderer,
   },
   {
     ...videoManifest,
     LayoutEditor: VideoLayoutEditor,
-    MappingEditor: VideoMappingEditor,
+    LayerEditor: VideoLayerEditor,
     Renderer: VideoRenderer,
   },
   {
     ...rectangleManifest,
     LayoutEditor: RectangleLayoutEditor,
-    MappingEditor: RectangleMappingEditor,
+    LayerEditor: RectangleLayerEditor,
     Renderer: RectangleRenderer,
   },
   {
     ...layerManifest,
     LayoutEditor: LayerLayoutEditor,
-    MappingEditor: LayerMappingEditor,
+    LayerEditor: LayerLayerEditor,
     Renderer: LayerRenderer,
   },
   {
     ...layoutManifest,
     LayoutEditor: LayoutLayoutEditor,
-    MappingEditor: LayoutMappingEditor,
+    LayerEditor: LayoutLayerEditor,
     Renderer: LayoutRenderer,
   },
   {
     ...keystrokeManifest,
     LayoutEditor: KeystrokeLayoutEditor,
-    MappingEditor: KeystrokeMappingEditor,
+    LayerEditor: KeystrokeLayerEditor,
     Renderer: KeystrokeRenderer,
   },
   {
     ...delayManifest,
     LayoutEditor: DelayLayoutEditor,
-    MappingEditor: DelayMappingEditor,
+    LayerEditor: DelayLayerEditor,
     Renderer: DelayRenderer,
   },
   {
     ...applicationManifest,
     LayoutEditor: ApplicationLayoutEditor,
-    MappingEditor: ApplicationMappingEditor,
+    LayerEditor: ApplicationLayerEditor,
     Renderer: ApplicationRenderer,
   },
   {
     ...websiteManifest,
     LayoutEditor: WebsiteLayoutEditor,
-    MappingEditor: WebsiteMappingEditor,
+    LayerEditor: WebsiteLayerEditor,
     Renderer: WebsiteRenderer,
   },
 ];

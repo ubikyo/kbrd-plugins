@@ -10,7 +10,7 @@ type Props = {
   disabled?: boolean;
 };
 
-export default function MappingEditor({
+export default function LayerEditor({
   config,
   onChange,
   disabled = false,

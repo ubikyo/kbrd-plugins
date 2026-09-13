@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import MappingEditor from "./MappingEditor";
+import LayerEditor from "./LayerEditor";
 import type { LabelConfig } from "./index";
 import manifest from "../plugin.json";
 import { BlockHarness } from "../../shared/web/stories/harness";
 
 const meta = {
-  title: "Plugins/render-label/MappingEditor",
-  component: MappingEditor,
+  title: "Plugins/render-label/LayerEditor",
+  component: LayerEditor,
   parameters: {
     docs: {
       description: {
@@ -23,7 +23,7 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof MappingEditor>;
+} satisfies Meta<typeof LayerEditor>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -38,7 +38,7 @@ export const Fresh: Story = {
   render: () => (
     <BlockHarness<LabelConfig> defaults={DEFAULTS}>
       {({ config, stored, onChange }) => (
-        <MappingEditor
+        <LayerEditor
           config={config}
           definedConfig={stored}
           onChange={onChange}
@@ -68,7 +68,7 @@ export const Configured: Story = {
       }}
     >
       {({ config, stored, onChange }) => (
-        <MappingEditor
+        <LayerEditor
           config={config}
           definedConfig={stored}
           onChange={onChange}
@@ -86,7 +86,7 @@ export const Disabled: Story = {
       initialStored={{ text: "Shift", precisePlacement: true }}
     >
       {({ config, stored, onChange }) => (
-        <MappingEditor
+        <LayerEditor
           config={config}
           definedConfig={stored}
           onChange={onChange}

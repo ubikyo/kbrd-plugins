@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import MappingEditor from "./MappingEditor";
+import LayerEditor from "./LayerEditor";
 import type { LayoutConfig } from "./index";
 import manifest from "../plugin.json";
 import { BlockHarness } from "../../shared/web/stories/harness";
 
 const meta = {
-  title: "Plugins/invoke-layout/MappingEditor",
-  component: MappingEditor,
+  title: "Plugins/invoke-layout/LayerEditor",
+  component: LayerEditor,
   parameters: {
     docs: {
       description: {
@@ -33,7 +33,7 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof MappingEditor>;
+} satisfies Meta<typeof LayerEditor>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -50,7 +50,7 @@ const render = (initialStored?: Partial<LayoutConfig>, disabled = false) =>
         initialStored={initialStored}
       >
         {({ config, stored, onChange }) => (
-          <MappingEditor
+          <LayerEditor
             config={config}
             definedConfig={stored}
             onChange={onChange}

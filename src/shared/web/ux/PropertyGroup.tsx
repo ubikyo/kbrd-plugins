@@ -100,7 +100,7 @@ export default function PropertyGroup(props: Props) {
   }
 
   // Whether the content panel is actually on show — the state the header
-  // tightens up against (see its own `py` below). Both halves matter:
+  // tightens up against (see its own `pb` below). Both halves matter:
   // `expanded` alone can be true for a property that isn't there.
   const open = active && expanded;
 
@@ -110,12 +110,14 @@ export default function PropertyGroup(props: Props) {
         justify="space-between"
         wrap="nowrap"
         gap="xs"
-        py={10}
+        // The same 15 on the three sides that face the panel's own edges,
+        // which is what every field inside a group is already inset by.
+        pt={15}
         px={15}
-        pr={10}
-        // Tighter while open: the content below brings its own spacing, so
-        // the full height only earns its keep on a closed group, where the
-        // header is the whole row.
+        // The bottom is the exception, and the only side that changes with
+        // the group's state: tighter while open, since the content below
+        // brings its own spacing, so the fuller gap only earns its keep on
+        // a closed group where the header is the whole row.
         pb={open ? 5 : 10}
       >
         <Text
@@ -170,7 +172,9 @@ export default function PropertyGroup(props: Props) {
       </Group>
       {active && (
         <Collapse expanded={expanded}>
-          <Box pr="15" pl="15" pt="0" pb="15">
+          {/* No top padding: the header above already ends with its
+              own, tightened for exactly this. */}
+          <Box pr="15" pl="15" pt="0" pb="10">
             {children}
           </Box>
         </Collapse>

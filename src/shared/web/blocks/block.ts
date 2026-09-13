@@ -4,7 +4,7 @@
  * and its own rules for what "adding" and "removing" it write — over
  * whichever slice of a plugin's config it owns. Plugins compose them
  * rather than each spelling out the same group again (see
- * `render-label`/`render-rectangle`/`render-key`'s own `MappingEditor`s).
+ * `render-label`/`render-rectangle`/`render-key`'s own `LayerEditor`s).
  *
  * `T` is the block's own fields; a plugin's config type is the
  * intersection of the ones it uses, so a block stays usable by any plugin

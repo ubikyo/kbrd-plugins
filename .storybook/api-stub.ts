@@ -16,11 +16,44 @@
  * editor to move on to showing what was picked.
  */
 
+// Shaped as KBRD-API shapes them: `family` and `style` read off each
+// file's own `name` table, which is what `Typography`'s two-field picker
+// groups by. A family of three so the Style field has something to
+// choose from, one of two, and one that names no style at all — the case
+// the field shows as "Regular". In the API's order: family by family,
+// each one light to heavy.
 const FONTS = [
-  { value: "Inter_18pt-Regular.ttf", label: "Inter Regular" },
-  { value: "Inter_18pt-Bold.ttf", label: "Inter Bold" },
-  { value: "JetBrainsMono-Regular.ttf", label: "JetBrains Mono" },
-  { value: "NotoSans-Regular.ttf", label: "Noto Sans" },
+  {
+    value: "Inter_18pt-Regular.ttf",
+    label: "Inter 18pt",
+    family: "Inter 18pt",
+    style: "Regular",
+  },
+  {
+    value: "Inter_18pt-SemiBold.ttf",
+    label: "Inter 18pt SemiBold",
+    family: "Inter 18pt",
+    style: "SemiBold",
+  },
+  {
+    value: "Inter_18pt-Bold.ttf",
+    label: "Inter 18pt Bold",
+    family: "Inter 18pt",
+    style: "Bold",
+  },
+  { value: "Jaro.ttf", label: "Jaro", family: "Jaro", style: "" },
+  {
+    value: "JetBrainsMono-Regular.ttf",
+    label: "JetBrains Mono",
+    family: "JetBrains Mono",
+    style: "Regular",
+  },
+  {
+    value: "JetBrainsMono-Bold.ttf",
+    label: "JetBrains Mono Bold",
+    family: "JetBrains Mono",
+    style: "Bold",
+  },
 ];
 
 const LAYOUTS = [

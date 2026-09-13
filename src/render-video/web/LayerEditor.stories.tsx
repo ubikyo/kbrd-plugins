@@ -1,14 +1,14 @@
 import { Box } from "@mantine/core";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import MappingEditor from "./MappingEditor";
+import LayerEditor from "./LayerEditor";
 import type { VideoConfig } from "./index";
 import manifest from "../plugin.json";
 import { Controlled } from "../../shared/web/stories/harness";
 
 const meta = {
-  title: "Plugins/render-video/MappingEditor",
-  component: MappingEditor,
+  title: "Plugins/render-video/LayerEditor",
+  component: LayerEditor,
   parameters: {
     docs: {
       description: {
@@ -21,7 +21,7 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof MappingEditor>;
+} satisfies Meta<typeof LayerEditor>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -34,7 +34,7 @@ const render = (initial: VideoConfig, disabled = false) =>
       <Box w={360}>
         <Controlled<VideoConfig> initial={initial}>
           {(config, onChange) => (
-            <MappingEditor
+            <LayerEditor
               config={config}
               onChange={onChange}
               disabled={disabled}

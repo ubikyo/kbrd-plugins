@@ -13,10 +13,21 @@ const meta = {
     docs: {
       description: {
         component:
-          "Whether a key is momentary (active only while held) or a " +
-          "toggle. Moved here from `<Inspector>`'s hardcoded system " +
-          "properties: it's a Key-element property like any other now, " +
-          "edited through this plugin rather than by the host.",
+          "A key's Layout form, which is the one block this plugin " +
+          "owns: **Type** — whether the key is momentary (active only " +
+          "while held) or a toggle.\n\n" +
+          "The block is `layout-key`'s own rather than one of the " +
+          "shared ones in `shared/web/blocks`: `keyMode` belongs to this " +
+          "plugin alone, since a Space has no such thing.\n\n" +
+          "It carries no `+`/`×`. A key is always one mode or the " +
+          "other, so there is no \"not set\" for a `×` to hand back to " +
+          "— which is also why `keyMode` can sit in the manifest's " +
+          "`defaultConfig`, where an addable block's field can't. The " +
+          "default is `momentary`, and it leads the dropdown so it reads " +
+          "as the default.\n\n" +
+          "Moved here from `<Inspector>`'s hardcoded system properties: " +
+          "it's a Key-element property like any other now, edited " +
+          "through this plugin rather than by the host.",
       },
     },
   },

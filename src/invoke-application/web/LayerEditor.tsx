@@ -24,7 +24,7 @@ type Props = {
  * `position`, reorderable by its grip). So this editor never speaks for
  * the key as a whole — only for the one step it belongs to.
  */
-export default function MappingEditor({
+export default function LayerEditor({
   config,
   definedConfig,
   onChange,

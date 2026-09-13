@@ -24,7 +24,7 @@ type Props = {
  * else needing "where does it go" gets the same control rather than a
  * second copy of it.
  */
-export default function MappingEditor({
+export default function LayerEditor({
   config,
   definedConfig,
   onChange,

@@ -62,9 +62,15 @@ const meta = {
           "unless something was set); `×` drops them all again, leaving " +
           "the renderer back on those defaults. The group counts as " +
           "present as soon as *any one* of its fields is stored.\n\n" +
-          "The font list comes from `GET /api/fonts`. Storybook has no " +
-          "KBRD-API behind it, so the four fonts offered here are the " +
-          "stub's — see `.storybook/api-stub.ts`.",
+          "The font is picked in two fields rather than one: the family " +
+          "on its own line, and the style beside the size. Neither can " +
+          "be split out of a filename — `FiraCodeNerdFont.ttf` is " +
+          "\"FiraCode Nerd Font\", which no rule over that string " +
+          "produces — so `GET /api/fonts` reads both off each file's own " +
+          "`name` table and the picker groups by what it gets back. A " +
+          "family whose file names no style shows \"Regular\".\n\n" +
+          "Storybook has no KBRD-API behind it, so the families offered " +
+          "here are the stub's — see `.storybook/api-stub.ts`.",
       },
     },
   },

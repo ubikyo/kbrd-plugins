@@ -1,14 +1,14 @@
 import { Box } from "@mantine/core";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import MappingEditor from "./MappingEditor";
+import LayerEditor from "./LayerEditor";
 import type { KeySymbolConfig } from "./index";
 import manifest from "../plugin.json";
 import { Controlled } from "../../shared/web/stories/harness";
 
 const meta = {
-  title: "Plugins/render-key-symbol/MappingEditor",
-  component: MappingEditor,
+  title: "Plugins/render-key-symbol/LayerEditor",
+  component: LayerEditor,
   parameters: {
     docs: {
       description: {
@@ -24,7 +24,7 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof MappingEditor>;
+} satisfies Meta<typeof LayerEditor>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -37,7 +37,7 @@ const render = (initial: KeySymbolConfig, disabled = false) =>
       <Box w={360}>
         <Controlled<KeySymbolConfig> initial={initial}>
           {(config, onChange) => (
-            <MappingEditor
+            <LayerEditor
               config={config}
               onChange={onChange}
               disabled={disabled}

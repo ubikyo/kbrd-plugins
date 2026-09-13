@@ -1,5 +1,5 @@
 import { Box, Group, Select } from "@mantine/core";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { IconType } from "react-icons";
 import {
   MdFormatBold,
@@ -112,7 +112,40 @@ const SCRIPTS: { value: TextScript; label: string; glyph: string }[] = [
   { value: "sub", label: "Subscript", glyph: "A₂" },
 ];
 
-type FontOption = { value: string; label: string };
+/**
+ * One installed face, as `GET /api/fonts` describes it: the filename a
+ * config stores, and the family and style the file itself claims — read
+ * out of its own `name` table rather than guessed from the filename,
+ * which is what lets the picker below be two fields instead of a list of
+ * filenames. See `kbrd_api/fonts.py`.
+ */
+type FontOption = {
+  value: string;
+  label: string;
+  family: string;
+  // Empty where the file names no style at all, which is what `NO_STYLE`
+  // stands in for.
+  style: string;
+};
+
+/**
+ * What the Style field shows for a face whose file names no style.
+ *
+ * It is the field's own word, not the font's: a family of one unnamed
+ * face — anything whose name table couldn't be read — would otherwise
+ * leave the field standing empty, reading as a control that failed
+ * rather than one with nothing to choose. "Regular" because that is what
+ * a face with nothing said about it *is*, and a field reading the same
+ * word here as it does over a font that names its own Regular is telling
+ * the truth either way.
+ */
+const NO_STYLE = "Regular";
+
+/** The face a family opens on when it is picked by family alone. */
+const defaultFace = (faces: FontOption[]) =>
+  faces.find(({ style }) => style === "" || style.toLowerCase() === "regular") ??
+  faces[0];
+
 // One request for the whole app: the list is the same for every editor
 // instance, and mounting a second one shouldn't re-fetch it.
 let fontsRequest: Promise<FontOption[]> | undefined;
@@ -180,6 +213,51 @@ export default function Typography<T extends TypographyConfig>({
       cancelled = true;
     };
   }, []);
+
+  // The installed faces grouped under the family each one names, in the
+  // order the API sent them: families alphabetically, and inside one the
+  // order a specimen runs in. A `Map` is what keeps that order — an
+  // object would re-sort nothing, but reading its keys back is a
+  // guarantee only for string keys that aren't numbers, and a family
+  // called "1942" is a real font.
+  const families = useMemo(() => {
+    const grouped = new Map<string, FontOption[]>();
+    for (const font of fonts) {
+      const existing = grouped.get(font.family);
+      if (existing) existing.push(font);
+      else grouped.set(font.family, [font]);
+    }
+    return grouped;
+  }, [fonts]);
+
+  // The face the config names, and the family it belongs to. Both are
+  // `undefined` until the list arrives, and stay that way for a config
+  // pointing at a font that has since been removed — in which case the
+  // two fields stand empty rather than claiming a font that isn't there.
+  const face = fonts.find(({ value }) => value === config.font);
+  const faces = (face && families.get(face.family)) ?? [];
+
+  /**
+   * A family picked by name, resolved back to one of its files.
+   *
+   * The style is carried across where the new family has one of the same
+   * name — going from Inter SemiBold to Quicksand lands on Quicksand
+   * SemiBold, not back on Regular — and otherwise falls to whatever the
+   * family opens on. Matching by name rather than by weight is
+   * deliberate: two families' "Medium" are the same intent even where
+   * their `usWeightClass` differs, which for a family with no Medium at
+   * all is the right place to give up rather than round to a neighbour.
+   */
+  function writeFamily(family: string) {
+    const candidates = families.get(family) ?? [];
+    const kept = face
+      ? candidates.find(
+          ({ style }) => style.toLowerCase() === face.style.toLowerCase(),
+        )
+      : undefined;
+    const next = kept ?? defaultFace(candidates);
+    if (next) write({ font: next.value });
+  }
 
   // One cast, here — see `Position` for why.
   const write = (patch: Partial<TypographyConfig>) => {
@@ -271,19 +349,49 @@ export default function Typography<T extends TypographyConfig>({
         onSelectionChange={setSelection}
         onChange={writeText}
       />
+      {/* The family on a line of its own, because it is the long name
+          of the two and the one worth reading in full: a picker that
+          truncated "Noto Sans Symbols 2" to fit a style beside it would
+          be hiding the thing being picked. */}
+      <Select
+        variant="unstyled"
+        size="xs"
+        mt="xs"
+        aria-label="Font"
+        placeholder="Choose a font"
+        // Two dozen families installed and more uploaded — long enough
+        // that typing beats scrolling.
+        searchable
+        allowDeselect={false}
+        data={[...families.keys()]}
+        value={face?.family ?? null}
+        disabled={disabled}
+        error={fontError || undefined}
+        onChange={(family) => family && writeFamily(family)}
+      />
+      {/* The style under it, sharing its line with the size — the two
+          short fields, and the two that qualify the family above rather
+          than replace it. Both stay put when a family has only one face:
+          a field that came and went would move the size out from under
+          the pointer. */}
       <Group gap="xs" wrap="nowrap" mt="xs">
         <Select
           variant="unstyled"
           size="xs"
           style={{ flex: 1, minWidth: 0 }}
-          aria-label="Font"
-          placeholder="Choose a font"
-          searchable
+          aria-label="Style"
+          placeholder={NO_STYLE}
           allowDeselect={false}
-          data={fonts}
-          value={config.font}
-          disabled={disabled}
-          error={fontError || undefined}
+          // Keyed by filename: the style *is* the file, and picking one
+          // is what writes `font`. Already in a specimen's order —
+          // romans light to heavy, then italics — which is how the API
+          // sorted them.
+          data={faces.map(({ value, style }) => ({
+            value,
+            label: style || NO_STYLE,
+          }))}
+          value={face?.value ?? null}
+          disabled={disabled || faces.length === 0}
           onChange={(value) => value && write({ font: value })}
         />
         <NumberField
@@ -293,7 +401,7 @@ export default function Typography<T extends TypographyConfig>({
           // conversion. Worth saying out loud in the field, since nothing
           // about a number between 1 and 999 hints at it.
           suffix=" mm"
-          // Whatever this takes comes straight out of the font Select
+          // Whatever this takes comes straight out of the Style select
           // beside it, which fills the rest of the row (`flex: 1`).
           width={63}
           min={1}

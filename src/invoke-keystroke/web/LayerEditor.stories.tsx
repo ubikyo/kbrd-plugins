@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import MappingEditor from "./MappingEditor";
+import LayerEditor from "./LayerEditor";
 import type { KeystrokeConfig } from "./index";
 import manifest from "../plugin.json";
 import { BlockHarness } from "../../shared/web/stories/harness";
 
 const meta = {
-  title: "Plugins/invoke-keystroke/MappingEditor",
-  component: MappingEditor,
+  title: "Plugins/invoke-keystroke/LayerEditor",
+  component: LayerEditor,
   parameters: {
     docs: {
       description: {
@@ -30,7 +30,7 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof MappingEditor>;
+} satisfies Meta<typeof LayerEditor>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -46,7 +46,7 @@ export const Fresh: Story = {
   render: () => (
     <BlockHarness<KeystrokeConfig> defaults={DEFAULTS}>
       {({ config, stored, onChange }) => (
-        <MappingEditor
+        <LayerEditor
           config={config}
           definedConfig={stored}
           onChange={onChange}
@@ -67,7 +67,7 @@ export const Added: Story = {
       initialStored={{ keys: [], behavior: "hold", durationMs: 50 }}
     >
       {({ config, stored, onChange }) => (
-        <MappingEditor
+        <LayerEditor
           config={config}
           definedConfig={stored}
           onChange={onChange}
@@ -91,7 +91,7 @@ export const Combination: Story = {
       }}
     >
       {({ config, stored, onChange }) => (
-        <MappingEditor
+        <LayerEditor
           config={config}
           definedConfig={stored}
           onChange={onChange}
@@ -112,7 +112,7 @@ export const Tap: Story = {
       initialStored={{ keys: ["ENTER"], behavior: "tap", durationMs: 120 }}
     >
       {({ config, stored, onChange }) => (
-        <MappingEditor
+        <LayerEditor
           config={config}
           definedConfig={stored}
           onChange={onChange}
@@ -134,7 +134,7 @@ export const Disabled: Story = {
       }}
     >
       {({ config, stored, onChange }) => (
-        <MappingEditor
+        <LayerEditor
           config={config}
           definedConfig={stored}
           onChange={onChange}

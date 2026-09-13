@@ -26,7 +26,7 @@ type Props = {
  * delay is exactly the point: where the step sits is where the wait
  * happens.
  */
-export default function MappingEditor({
+export default function LayerEditor({
   config,
   definedConfig,
   onChange,

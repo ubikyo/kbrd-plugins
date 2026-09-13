@@ -18,7 +18,7 @@ const meta = {
           "*of the box* a coordinate pair addresses. The two are " +
           "complementary, and only `AnchorGrid` is of any use once " +
           "explicit coordinates are in play — which is why the `Position` " +
-          "block, the Mapping-side control, carries that one and not this.",
+          "block, the Layer-side control, carries that one and not this.",
       },
     },
   },

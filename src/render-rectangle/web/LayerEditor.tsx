@@ -27,7 +27,7 @@ type Props = {
  * group is the renderer's own default size, one with no Background falls
  * back to the `color` the plugin stored before that block existed.
  */
-export default function MappingEditor({
+export default function LayerEditor({
   config,
   definedConfig,
   onChange,

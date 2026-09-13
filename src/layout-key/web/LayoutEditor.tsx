@@ -1,7 +1,5 @@
-import { Select } from "@mantine/core";
-
 import type { LayoutKeyConfig } from "./index";
-import PropertyRow from "../../shared/web/PropertyRow";
+import Type from "./Type";
 
 type Props = {
   config: LayoutKeyConfig;
@@ -9,34 +7,20 @@ type Props = {
   disabled?: boolean;
 };
 
-// Moved here from <Inspector>'s hardcoded system properties: momentary/toggle
-// is now a Key-element property like any other, edited through this plugin.
+/**
+ * A key's Layout form, which is the one block this plugin owns — see
+ * `Type`. Kept as its own component rather than exporting the block
+ * directly, so the plugin keeps the `LayoutEditor` name every other
+ * plugin exports and has somewhere to put a second block later.
+ *
+ * Moved here from `<Inspector>`'s hardcoded system properties:
+ * momentary/toggle is a Key-element property like any other now, edited
+ * through this plugin.
+ */
 export default function LayoutEditor({
   config,
   onChange,
   disabled = false,
 }: Props) {
-  return (
-    <PropertyRow label="Type">
-      <Select
-        w="100%"
-        aria-label="Type"
-        size="xs"
-        allowDeselect={false}
-        data={[
-          { value: "momentary", label: "Momentary" },
-          { value: "toggle", label: "Toggle" },
-        ]}
-        value={config.keyMode ?? "momentary"}
-        disabled={disabled}
-        success
-        onChange={(value) =>
-          onChange({
-            ...config,
-            keyMode: value === "toggle" ? "toggle" : "momentary",
-          })
-        }
-      />
-    </PropertyRow>
-  );
+  return <Type config={config} onChange={onChange} disabled={disabled} />;
 }
